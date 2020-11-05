@@ -1,0 +1,3049 @@
+ISSUE_ID,USER,DATE,COMMENT
+RAT-3, Robert Burrell Donkin,26-05-08 18:40,"The text is a free unpaginated sample from the start of the file. However, stylesheet used to generate plain text report contained errant whitespace. This has now been removed."
+RAT-3, Sebb,02-09-11 0:26,"The report now looks like this:
+
+ =======================================================================
+ ==src/conf/MANIFEST.MF
+ =======================================================================
+Manifest-Version: 1.0
+Package: @package@
+Extension-Name: @name@
+
+i.e. the header is indented, but the file is not.
+
+This was using version 0.7"
+RAT-3, Gavin,19-11-11 3:50,"Fixed in r1203953 , feel free to test/check."
+RAT-3, Stefan Bodewig,21-11-11 13:23,Neither the first line nor the header are indented with svn revision 1204460
+RAT-7, David Crossley,11-04-08 2:47,"I agree. See the perl scripts in
+https://svn.apache.org/repos/private/committers/relicense/src/perl/
+insert_license.pl and update-AL20.pl
+
+It has patterns for each version of Apache License header. There are also some variations in existence. I spent a lot of effort detecting each license type (also detect third-party code that uses the Apache License)."
+RAT-7, Robert Burrell Donkin,17-05-08 21:58,Agreed. Want to help with the code?
+RAT-7, Philipp Ottlinger,06-12-11 20:37,Is this task a duplicate of RAT-16 or what's the difference here? Thanks.
+RAT-7, Stefan Bodewig,07-12-11 7:44,"I'm not sure what RAT-16 really is but I think RAT-16 is resolved and this one is the oposite of it.
+
+Over time we've had several license headers in use at the ASF and RAT doesn't properly recognize the ones that are outdated by now."
+RAT-7, David Crossley,08-12-11 23:29,"The scripts mentioned above needed to first detect that it is an AL-type header, then detect other patterns to distinguish between the variants."
+RAT-7, David Crossley,09-12-11 1:36,"Here are some modified snippets from those Perl scripts:
+
+--------
+AL-20 = Apache License 2.0 with original Copyright line.
+
+AL-20a = Apache License 2.0 with original Copyright line and ""or its licensors"".
+
+AL-20b = Apache License 2.0 with no Copyright line, i.e. the current style.
+
+AL-20x = same as AL-20b but missing the word ""contributor"". (That was due to a mistake that i made, and only discovered a few days later. Hopefully no-one but Forrest/Cocoon used the script during that time.)
+
+F-AL-20 = If not one of the above, then assume it is someone else using AL-20.
+
+AL-12 = Apache Software License Version 1.2
+F-AL-12 = someone else using AL-12.
+
+AL-11 = Apache Software License Version 1.1
+F-AL-11 = someone else using AL-11.
+
+AL-10 = Copyright The Apache Group
+
+--------
+LICENSE_CASE: {
+  if ($headContent =~ /Licensed .* Apache Software Foundation (ASF) under/) {
+    if ($headContent !~ /contributor license agreements\.[ ]+See the NOTICE/) 
+{
+      # detect an error with a previous version of this script
+      $licenseType = ""AL-20x"";
+    }
+    else 
+{
+      $licenseType = ""AL-20b"";
+    }
+    last LICENSE_CASE;
+  }
+  if ($headContent =~ /Licensed under the Apache License.*Version 2.0/) {
+    if ($headContent =~ /Apache Software Foundation or its licensors/) 
+{
+      $licenseType = ""AL-20a"";
+      $warnAL20aOldLicense = 1;
+    }
+    else {
+      if ($headContent =~ /Copyright.*Apache Software Foundation/) 
+{
+        $licenseType = ""AL-20"";
+        $warnAL20OldLicense = 1;
+      }
+      else 
+{
+        $licenseType = ""F-AL-20"";
+      }
+    }
+    last LICENSE_CASE;
+  }
+  if ($headContent =~ /The Apache Software License.*Version 1.2/) {
+    if ($headContent =~ /Copyright.*Apache Software Foundation/) 
+{
+      $licenseType = ""AL-12"";
+    }
+    else 
+{
+      $licenseType = ""F-AL-12"";
+    }
+    last LICENSE_CASE;
+  }
+  if ($headContent =~ /The Apache Software License.*Version 1.1/) {
+    if ($headContent =~ /Copyright.*Apache Software Foundation/) 
+{
+      $licenseType = ""AL-11"";
+    }
+    else 
+{
+      $licenseType = ""F-AL-11"";
+    }
+    last LICENSE_CASE;
+  }
+  if ($headContent =~ /Copyright.*The Apache Group/) 
+{
+    $licenseType = ""AL-10"";
+    last LICENSE_CASE;
+  }
+}
+
+--------
+Improvements:
+
+
+	Needs to handle double-justified text, hence multiple whitespace. Ignore whitespace.
+
+
+
+
+	Pattern matching needs to be multi-line.
+
+
+
+
+	Perhaps need to handle ""[Tt]he Apache""."
+RAT-7, Stefan Bodewig,12-12-11 12:23,"The FullTextMatchingLicense base class I extracted out of the OASIS license for MIT and GPL may already be usable for that.
+
+It matches on multiple lines, ignores whitespace (in fact everything that's not a character or a number) and is mostly case-insensitive.  It doesn't do regexes at all, though, it performs a substring match.  Actually I now realize this isn't true as it uses a regex internally, it would just strip out any special characters from the pattern the way it works right now.  Shouldn't be too difficult to adapt, in particular since we don't need to care about backwards compatibility (the class is new)."
+RAT-11, Ross Gardler,03-05-08 23:59,Report correct num of unapproved licences
+RAT-11, Jochen Wiedmann,18-05-08 12:18,The best way to fix this issue is by resolving RAT-14.
+RAT-11, Jukka Zitting,18-01-09 11:41,"Oops, I didn't notice this issue when filing RAT-35. Resolving this as a reverse duplicate as the patch in RAT-35 got already applied."
+RAT-12, Ross Gardler,04-05-08 0:01,Correct SCM info
+RAT-12, Robert Burrell Donkin,26-05-08 18:47,Committed. Many thanks.
+RAT-29, Ross Gardler,05-07-08 22:52,"I'm not seeing this error on Windows + Cygwin 
+
+I'm on Maven 2.0.7 rather than 2.0.8 in the original  report"
+RAT-29, Robert Burrell Donkin,06-07-08 21:10,"mvn -v
+Maven version: 2.0.9
+Java version: 1.6.0_06
+OS name: ""linux"" version: ""2.6.23-gentoo-r3"" arch: ""amd64"" Family: ""unix""
+
+no NPE but some test failures :-/"
+RAT-29, Jukka Zitting,07-07-08 9:08,I upgraded to Maven 2.0.9 and the NPE is now gone.
+RAT-33, Gavin,01-09-08 11:01,"I'm guessing the source of this is <subscribe>rat-dev-unsubscribe@incubator.apache.org</subscribe>
+from the pom.xml."
+RAT-33, Jochen Wiedmann,17-01-09 22:49,"Fixed in the pom.xml, will be fixed on the site automatically when we redeploy it."
+RAT-34, Stefan Bodewig,15-07-11 7:53,"I stumbled over this when I refactored the AbstractLicenseAppender code.  The same is true for XML files without an XML decl which would need a slightly different resolution (the XML decl has to be added so we can add the comment).
+
+I'd prefer the second option myself in particular since we don't have any documentation anyway."
+RAT-34, Stefan Bodewig,17-07-11 6:28,fixed with svn revision 1147539
+RAT-35, Jukka Zitting,15-01-09 16:12,The attached trivial patch fixes this.
+RAT-35, Jochen Wiedmann,17-01-09 22:43,"Applied, thank you!"
+RAT-36, Jukka Zitting,15-01-09 16:28,"Proposed patch (against rat/main/trunk, revision 734690)."
+RAT-36, Jukka Zitting,15-01-09 16:44,Updated patch that modifies also the test cases to match the updated report contents.
+RAT-36, Jochen Wiedmann,17-01-09 22:35,"Applied, thank you!"
+RAT-39, David Crossley,28-02-09 4:19,"Ensure no line-endings issues:
+https://svn.apache.org/repos/private/committers/tools/find_carriage_returns.sh
+
+./apache-rat/src/site/apt/index.apt
+./apache-rat-core/src/site/apt/index.apt
+./apache-rat-tasks/src/site/apt/index.apt
+./src/site/apt/index.apt
+
+Those seem to have mixed line-endings.
+
+A RAT committer on UNIX needs to run 'dos2unix' for those files."
+RAT-39, David Crossley,28-02-09 4:24,"Ensure that svn:eol-style settings are ""native"" for all text files:
+https://svn.apache.org/repos/private/committers/tools/report_svn_text.pl
+
+Mostly okay. The following are ones with issues.
+
+The committers who did 'svn add' for these files need to see:
+http://www.apache.org/dev/version-control.html#https-svn-config
+
+apache-rat/src/site/apt/index.apt
+apache-rat-core/src/main/resources/org/apache/rat/plain-rat.xsl
+apache-rat-core/src/site/apt/index.apt
+apache-rat-core/src/test/resources/elements/LICENSE
+apache-rat-core/src/test/resources/elements/NOTICE
+apache-rat-plugin/src/main/filtered-resources/rat-report.properties
+apache-rat-plugin/src/main/resources/org/apache/rat/mp/identity.xsl
+apache-rat-plugin/src/main/resources/org/apache/rat/mp/rat-report.properties
+apache-rat-plugin/src/site/apt/index.apt
+apache-rat-plugin/src/site/apt/usage.apt
+apache-rat-plugin/src/site/apt/examples/basic.apt
+apache-rat-plugin/src/site/apt/examples/site.apt
+apache-rat-plugin/src/site/apt/examples/verify.apt
+apache-rat-plugin/src/site/fml/faq.fml
+apache-rat-tasks/src/site/apt/index.apt
+src/site/apt/index.apt
+
+See attached patch-eol.txt
+
+Also the files listed with dos2unix problems above, need to have 'svn propset svn:eol-style native'"
+RAT-39, David Crossley,28-02-09 4:25,"Some xml files have missing ""XML Declaration"". See attached patch-xml-decl.txt"
+RAT-39, Stefan Bodewig,28-02-09 5:48,"I use Ant's fixcrlf task for that in a build file like the attached one.
+
+Thanks David"
+RAT-39, Stefan Bodewig,28-02-09 5:49,Ant build file to fix inconsistent line ends
+RAT-41, David Crossley,01-03-09 2:16,Patch attached.
+RAT-41, Jochen Wiedmann,19-03-09 17:05,"Applied, thank you!"
+RAT-43, Gavin,13-12-09 9:48,"Maybe this has been solved as a side effect of something else, or a configuration problem?
+
+Attached is a recent report using ant, no problems with it."
+RAT-43, Stefan Bodewig,15-07-11 3:53,"I can't reproduce it myself anymore either, it is quite possible there is/was a bug in the svn trunk version of Ant I've been using at that point in time."
+RAT-44, Jochen Wiedmann,03-04-09 11:17,Changed in SVN and deployed to the Incubator web site. Thanks!
+RAT-62, Gavin,17-07-09 6:31,Attaching diff of the 4 files with missing headers.
+RAT-62, Gavin,07-02-10 10:41,"Added license headers to 3 files, preferring to exclude the BUILD.txt file.
+
+The tests should now just report on the 5 purposely failed files."
+RAT-63, Giridharan Kesavan,16-09-09 6:49,"attached a patch that adds the right URI to the -taskdef ant target
+-tnx"
+RAT-63, Stefan Bodewig,16-09-09 8:17,"fixed in svn revision 815659
+
+Thanks"
+RAT-64, Brian Fox,27-09-09 17:55,Here's a patch that corrects all the links and makes an attempt at cohesive navigation between all the pieces.
+RAT-64, Felix Knecht,15-01-10 22:55,"Why not using preset menus [1] instead of enumerating modules and parents?
+
+[1] http://maven.apache.org/plugins/maven-site-plugin/examples/sitedescriptor.html (Including Generated Content)"
+RAT-64, Brian Fox,05-02-10 1:50,Applied Felix's patch.
+RAT-70, Felix Knecht,12-01-10 0:56,Add missing section closing
+RAT-70, Gavin,08-02-10 0:34,"Committed r907529 , thanks!"
+RAT-71, Gavin,07-02-10 23:07,"Some work has been done to the main RAT site, can you check against this patch and confirm if it is still required / upto date.
+
+Thanks"
+RAT-71, Felix Knecht,07-02-10 23:50,"Patch still required and up to date.
+
+	Missing page would be at [0]
+	Or goto [1] and click on 'Goals'
+
+
+
+[0] http://incubator.apache.org/rat/apache-rat-plugin/plugin-info.html
+[1] http://incubator.apache.org/rat/apache-rat-plugin/index.html"
+RAT-71, Gavin,08-02-10 0:30,"Committed r907528, thanks!"
+RAT-80, Philipp Ottlinger,06-12-11 20:40,"Hi,
+is the issue still relevant?
+Did you try the most current trunk?
+Could you provide more details of the failure (e.g. svn revision)?
+Thanks"
+RAT-80, Orion Poplawski,06-12-11 22:35,"No, I think this issue was fixed."
+RAT-81, Stefan Bodewig,15-07-11 12:14,"I think it depends on the java VM as well, I don't seem to get the MalformedInputException on my Ubuntu box using OpenJDK6.
+
+svn revision 1147110 contains an attempt at a testcase but it cannot assert anything since the precondition (there is a MIE) is never true for me.
+
+I think I know how to fix the problem using NIO but so far am reluctant as I don't have a good way to regression test it."
+RAT-81, Stefan Bodewig,17-07-11 5:07,svn revision 1147525 now contains the NIO based code which I think should mark the files as binary for you.  It would be good if you could verify for me whether RAT's trunk behaves as desired now.
+RAT-81, Stefan Bodewig,27-07-11 6:26,"Let's be optimistic and assume it is fixed, please reopen if the problem pops up again once 0.8 has been released."
+RAT-81, Sebb,16-09-14 13:25,"It does not seem right to me to mark XML files with invalid contents as binary.
+Binary implies that the file does not need a license, but that is not the case.
+
+Such files should still have a valid license (unless excluded), so RAT should report the file as unreadable or similar."
+RAT-81, Sebb,16-09-14 13:37,Also I'm not sure that the test files do have any errors in them
+RAT-82, Stefan Bodewig,04-03-11 9:18,See http://mail-archives.apache.org/mod_mbox/incubator-rat-dev/201102.mbox/%3C87fwrmac2v.fsf@v35516.1blu.de%3E
+RAT-82, Emily Jiang,11-03-11 11:32,Can you provide a justification for why it won't be fixed? I think this SHOULD be fixed.
+RAT-82, Stefan Bodewig,11-03-11 13:02,"Hi Emily,
+
+the justification is inside the email to the dev list I linked in my comment.
+
+The short version is that the Apache Software License is used by projects outside the ASF as well and their source codes will not have the first line of the license text you want the matcher to look for.  If we changed the matcher it wouldn't detect the license for all those other projects anymore."
+RAT-82, Emily Jiang,11-03-11 16:28,Thanks Stefan. Failed to spot the link previously.
+RAT-86, Stefan Bodewig,11-03-11 14:13,should be fixed with svn revision 1080572
+RAT-86, Marlon Pierce,11-03-11 19:55,"SVN version still isn't working for me.  I had to add the line ""	configuration.setHeaderMatcher(Defaults.createDefaultMatcher());"" to the styleReport(...) method. That is, SVN has the code
+ public void styleReport(PrintStream out,
+302	                            ReportConfiguration configuration)
+303	        throws Exception {
+304	        final IReportable base = getDirectory(out);
+305	        if (base != null) 
+{
+306	            InputStream style = Defaults.getDefaultStyleSheet();
+307	            report(out, base, style, configuration);
+308	        }
+309	    }
+
+but this throws NullPointerExceptions (not reproduced here).  My local fix (see also the original note) is
+
+
+    public void styleReport(PrintStream out,
+                            ReportConfiguration configuration)
+        throws Exception {
+        final IReportable base = getDirectory(out);
+        if (base != null) 
+{
+            InputStream style = Defaults.getDefaultStyleSheet();
+            //----Add line below------
+	    configuration.setHeaderMatcher(Defaults.createDefaultMatcher());
+            report(out, base, style, configuration);
+        }
+    }"
+RAT-86, Stefan Bodewig,14-03-11 16:17,"Oops, yes, an oversight, sorry.
+
+Should finally be fixed with svn revision 1081440"
+RAT-87, Stefan Bodewig,18-03-11 17:40,refactored the test class and made sure tests are trying as hard as possible to remove all temporary files.
+RAT-92, Stefan Bodewig,10-08-11 12:37,fixed with svn revision 1156143
+RAT-94, Stefan Bodewig,10-08-11 13:22,should be fixed with svn revision 1156170
+RAT-98, Dennis Lundberg,04-11-12 18:38,"The current behavior of the Maven plugin is to log the files that are excluded in the build log.
+
+It can look like this example, where I have excluded the BUILD.txt file:
+
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Apache Rat
+[INFO]    task-segment: [org.apache.rat:apache-rat-plugin:0.9-SNAPSHOT:check]
+[INFO] ------------------------------------------------------------------------
+[INFO] snapshot org.apache.rat:apache-rat-core:0.9-SNAPSHOT: checking for updates from apache.snapshots
+[INFO] [apache-rat:check 
+{execution: default-cli}
+]
+[INFO] Exclude: BUILD.txt
+
+Did you want for this to be included in the report?"
+RAT-98, Sebb,04-11-12 22:15,"Yes, the details need to appear in the report so that it contains all the necessary information.
+Ideally this should show all files that are actually excluded, not the file names in the <exclude> tags - i.e. don't show missing files, but do show files that match wildcard entries.
+
+The console log is transitory, so should not be the only place where such information is reported."
+RAT-98, Robert Burrell Donkin,06-11-12 19:33,1
+RAT-98, Sebb,29-08-13 10:45,"It would be helpful to show the active include and exclude configuration on the report as well; this should be after any defaults have been applied. [The defaults may change between releases, so it is helpful to have the active settings documented.]
+
+For excludes of directory trees, it probably does not make sense to list individual files (there will generally be too many).
+It's really only for the more specific excludes where the file names might be useful - the exclude may be too general."
+RAT-100, Stefan Bodewig,02-11-11 6:16,should be fixed with svn revision 1196463
+RAT-101, Stefan Bodewig,17-11-11 10:32,"Yes, I saw that when I published the release.
+
+Actually I'd prefer a download page like the Commons projects have and it is on my TODO list (I need to do the same for log4net) - I just need to investigate how it is done in Commons.  Do you have any pointers beyond ""read the Commons parent POM""?"
+RAT-101, Sebb,17-11-11 13:50,"Commons projects use the commons-build plugin to create download_component.xml which creates the .html as part of mvn site; the download_component.cgi file is manually created and referenced in site.xml
+
+I suspect the plugin may be too Commons-specific to use, but you could just copy an existing download_*.xml file and modify that manually."
+RAT-101, Stefan Bodewig,25-11-11 5:18,"Download page is now more user friendly and contains direct links to the mirrors and unmirrored links for KEYS, signatures and hashes."
+RAT-101, Sebb,25-11-11 17:54,Thanks. all looks OK now.
+RAT-102, Philipp Ottlinger,18-11-11 22:03,Patch with the corrected typo
+RAT-102, Gavin,19-11-11 3:56,"Applied, thanks for the patch"
+RAT-107, Stevo Slavic,25-09-13 20:28,Attaching apache-rat-project-RAT-107.patch which fixes the issue. Additional integration test is included.
+RAT-107, ASF GitHub Bot,09-07-14 12:09,"Github user aledsage commented on a diff in the pull request:
+
+    https://github.com/apache/incubator-brooklyn/pull/49#discussion_r14705854
+
+    — Diff: pom.xml —
+    @@ -678,6 +662,64 @@
+                         </execution>
+                     </executions>
+                 </plugin>
+    +            <!-- Needed for command-line access, e.g mvn apache-rat:rat and mvn apache-rat:check -->
+    +            <plugin>
+    +              <groupId>org.apache.rat</groupId>
+    +              <artifactId>apache-rat-plugin</artifactId>
+    +              <version>0.10</version>
+    +              <executions>
+    +                <execution>
+    +                  <phase>verify</phase>
+    +                  <goals>
+    +                    <goal>check</goal>
+    +                  </goals>
+    +                </execution> 
+    +              </executions>
+    +              <configuration>
+    +                <!--
+    +                     If you wish to override this list in the component (child) pom, ensure you use
+    +                         <excludes combine.children=""merge"">
+    +                     so that the child pom entries replace the parent entries
+    +                 -->
+    +                <excludes combine.children=""append"">
+    +                  <!-- git and IDE project files -->
+    +                  <!-- see https://issues.apache.org/jira/browse/RAT-107 -->
+    +                  <exclude>*/.git/*</exclude>
+    +                  <exclude>**/.gitignore</exclude>
+    +                  <exclude>*/.idea/*</exclude>
+    +                  <exclude>*/.iml</exclude>
+    +                  <exclude>*/.classpath/*</exclude>
+    +                  <exclude>**/.project</exclude>
+    +                  <exclude>*/.settings/*</exclude>
+    +                  <exclude>*/.log</exclude>
+    +                  <exclude>*/brooklyn.log.*</exclude>
+    +                  <!-- files not requiring licence -->
+    +                  <exclude>ignored/**</exclude>
+    +                  <exclude>LICENSE.md</exclude>
+    +                  <exclude>**/MANIFEST.MF</exclude>
+    +                  <exclude>*/test-output/*</exclude>
+    +                  <exclude>*/.pem.pub</exclude>
+    +                  <exclude>*/.svg</exclude>
+    +                  <exclude>*/.crt</exclude>
+    +                  <exclude>*/.csr</exclude>
+    +                  <exclude>*/.key</exclude>
+    +                  <exclude>*/.key.org</exclude>
+    +                  <exclude>*/.psd</exclude>
+    +                  <exclude>*/.json</exclude>
+    — End diff –
+
+    Is this ok to exclude?"
+RAT-107, ASF GitHub Bot,09-07-14 12:10,"Github user aledsage commented on a diff in the pull request:
+
+    https://github.com/apache/incubator-brooklyn/pull/49#discussion_r14705875
+
+    — Diff: pom.xml —
+    @@ -678,6 +662,64 @@
+                         </execution>
+                     </executions>
+                 </plugin>
+    +            <!-- Needed for command-line access, e.g mvn apache-rat:rat and mvn apache-rat:check -->
+    +            <plugin>
+    +              <groupId>org.apache.rat</groupId>
+    +              <artifactId>apache-rat-plugin</artifactId>
+    +              <version>0.10</version>
+    +              <executions>
+    +                <execution>
+    +                  <phase>verify</phase>
+    +                  <goals>
+    +                    <goal>check</goal>
+    +                  </goals>
+    +                </execution> 
+    +              </executions>
+    +              <configuration>
+    +                <!--
+    +                     If you wish to override this list in the component (child) pom, ensure you use
+    +                         <excludes combine.children=""merge"">
+    +                     so that the child pom entries replace the parent entries
+    +                 -->
+    +                <excludes combine.children=""append"">
+    +                  <!-- git and IDE project files -->
+    +                  <!-- see https://issues.apache.org/jira/browse/RAT-107 -->
+    +                  <exclude>*/.git/*</exclude>
+    +                  <exclude>**/.gitignore</exclude>
+    +                  <exclude>*/.idea/*</exclude>
+    +                  <exclude>*/.iml</exclude>
+    +                  <exclude>*/.classpath/*</exclude>
+    +                  <exclude>**/.project</exclude>
+    +                  <exclude>*/.settings/*</exclude>
+    +                  <exclude>*/.log</exclude>
+    +                  <exclude>*/brooklyn.log.*</exclude>
+    +                  <!-- files not requiring licence -->
+    +                  <exclude>ignored/**</exclude>
+    +                  <exclude>LICENSE.md</exclude>
+    +                  <exclude>**/MANIFEST.MF</exclude>
+    +                  <exclude>*/test-output/*</exclude>
+    +                  <exclude>*/.pem.pub</exclude>
+    +                  <exclude>*/.svg</exclude>
+    +                  <exclude>*/.crt</exclude>
+    +                  <exclude>*/.csr</exclude>
+    +                  <exclude>*/.key</exclude>
+    +                  <exclude>*/.key.org</exclude>
+    +                  <exclude>*/.psd</exclude>
+    +                  <exclude>*/.json</exclude>
+    +                  <exclude>*/.plxarc</exclude>
+    +                  <exclude>**/services/brooklyn.location.LocationResolver</exclude>
+    — End diff –
+
+    Presumably these services files could have the comment at the top as well? Not sure if required. @richardcloudsoft what do you think?"
+RAT-107, ASF GitHub Bot,09-07-14 12:31,"Github user Nakomis commented on a diff in the pull request:
+
+    https://github.com/apache/incubator-brooklyn/pull/49#discussion_r14706576
+
+    — Diff: pom.xml —
+    @@ -678,6 +662,64 @@
+                         </execution>
+                     </executions>
+                 </plugin>
+    +            <!-- Needed for command-line access, e.g mvn apache-rat:rat and mvn apache-rat:check -->
+    +            <plugin>
+    +              <groupId>org.apache.rat</groupId>
+    +              <artifactId>apache-rat-plugin</artifactId>
+    +              <version>0.10</version>
+    +              <executions>
+    +                <execution>
+    +                  <phase>verify</phase>
+    +                  <goals>
+    +                    <goal>check</goal>
+    +                  </goals>
+    +                </execution> 
+    +              </executions>
+    +              <configuration>
+    +                <!--
+    +                     If you wish to override this list in the component (child) pom, ensure you use
+    +                         <excludes combine.children=""merge"">
+    +                     so that the child pom entries replace the parent entries
+    +                 -->
+    +                <excludes combine.children=""append"">
+    +                  <!-- git and IDE project files -->
+    +                  <!-- see https://issues.apache.org/jira/browse/RAT-107 -->
+    +                  <exclude>*/.git/*</exclude>
+    +                  <exclude>**/.gitignore</exclude>
+    +                  <exclude>*/.idea/*</exclude>
+    +                  <exclude>*/.iml</exclude>
+    +                  <exclude>*/.classpath/*</exclude>
+    +                  <exclude>**/.project</exclude>
+    +                  <exclude>*/.settings/*</exclude>
+    +                  <exclude>*/.log</exclude>
+    +                  <exclude>*/brooklyn.log.*</exclude>
+    +                  <!-- files not requiring licence -->
+    +                  <exclude>ignored/**</exclude>
+    +                  <exclude>LICENSE.md</exclude>
+    +                  <exclude>**/MANIFEST.MF</exclude>
+    +                  <exclude>*/test-output/*</exclude>
+    +                  <exclude>*/.pem.pub</exclude>
+    +                  <exclude>*/.svg</exclude>
+    +                  <exclude>*/.crt</exclude>
+    +                  <exclude>*/.csr</exclude>
+    +                  <exclude>*/.key</exclude>
+    +                  <exclude>*/.key.org</exclude>
+    +                  <exclude>*/.psd</exclude>
+    +                  <exclude>*/.json</exclude>
+    — End diff –
+
+    I excluded json as it doesn't support comments, I had a quick look at json files in jClouds (just as an example of an Apache TLP) and their json files don't include the apache header"
+RAT-107, ASF GitHub Bot,09-07-14 12:43,"Github user richardcloudsoft commented on a diff in the pull request:
+
+    https://github.com/apache/incubator-brooklyn/pull/49#discussion_r14706993
+
+    — Diff: pom.xml —
+    @@ -678,6 +662,64 @@
+                         </execution>
+                     </executions>
+                 </plugin>
+    +            <!-- Needed for command-line access, e.g mvn apache-rat:rat and mvn apache-rat:check -->
+    +            <plugin>
+    +              <groupId>org.apache.rat</groupId>
+    +              <artifactId>apache-rat-plugin</artifactId>
+    +              <version>0.10</version>
+    +              <executions>
+    +                <execution>
+    +                  <phase>verify</phase>
+    +                  <goals>
+    +                    <goal>check</goal>
+    +                  </goals>
+    +                </execution> 
+    +              </executions>
+    +              <configuration>
+    +                <!--
+    +                     If you wish to override this list in the component (child) pom, ensure you use
+    +                         <excludes combine.children=""merge"">
+    +                     so that the child pom entries replace the parent entries
+    +                 -->
+    +                <excludes combine.children=""append"">
+    +                  <!-- git and IDE project files -->
+    +                  <!-- see https://issues.apache.org/jira/browse/RAT-107 -->
+    +                  <exclude>*/.git/*</exclude>
+    +                  <exclude>**/.gitignore</exclude>
+    +                  <exclude>*/.idea/*</exclude>
+    +                  <exclude>*/.iml</exclude>
+    +                  <exclude>*/.classpath/*</exclude>
+    +                  <exclude>**/.project</exclude>
+    +                  <exclude>*/.settings/*</exclude>
+    +                  <exclude>*/.log</exclude>
+    +                  <exclude>*/brooklyn.log.*</exclude>
+    +                  <!-- files not requiring licence -->
+    +                  <exclude>ignored/**</exclude>
+    +                  <exclude>LICENSE.md</exclude>
+    +                  <exclude>**/MANIFEST.MF</exclude>
+    +                  <exclude>*/test-output/*</exclude>
+    +                  <exclude>*/.pem.pub</exclude>
+    +                  <exclude>*/.svg</exclude>
+    +                  <exclude>*/.crt</exclude>
+    +                  <exclude>*/.csr</exclude>
+    +                  <exclude>*/.key</exclude>
+    +                  <exclude>*/.key.org</exclude>
+    +                  <exclude>*/.psd</exclude>
+    +                  <exclude>*/.json</exclude>
+    — End diff –
+
+    s/jClouds/jclouds/ `</pedantic>`"
+RAT-109, David Crossley,30-11-11 5:23,Thanks. Patch applied.
+RAT-109, jv,30-11-11 15:32,"This patch does not work, at least for my project. It fails because mkdirs does not create the directories, but it does not create the directories because it already exists. It should only throw that exception if the folder does not exist and it fails to create. Patch is pasted below (I tested it for my case at the very least).
+
+Index: src/main/java/org/apache/rat/mp/RatCheckMojo.java
+===================================================================
+— src/main/java/org/apache/rat/mp/RatCheckMojo.java	(revision 1208465)
++++ src/main/java/org/apache/rat/mp/RatCheckMojo.java	(working copy)
+@@ -153,7 +153,7 @@
+     public void execute() throws MojoExecutionException, MojoFailureException
+     {
+         File parent = reportFile.getParentFile();
+
+	if(!parent.mkdirs()) {
++        if (!parent.exists() && !parent.mkdirs()) 
+{
+             throw new MojoExecutionException(""Could not create report parent directory "" + parent);
+         }"
+RAT-109, Philipp Ottlinger,30-11-11 20:29,"+1
+John is right. Sorry"
+RAT-109, Philipp Ottlinger,30-11-11 20:33,Verified that John is/was right.
+RAT-109, Stefan Bodewig,30-11-11 20:41,should be fixed with svn revision 1208763
+RAT-109, Sebb,30-11-11 21:41,"There's a small window in the patch code which can potentially cause a failure, see https://issues.apache.org/jira/browse/JCI-67 for further details.
+
+The checks need to be the other way round, i.e.
+
+if(!parent.mkdirs() && !parent.exists()) 
+{ // or !isDirectory() as appropriate
+    throw...
+}"
+RAT-109, Stefan Bodewig,30-11-11 22:04,applied with svn revision 1208826
+RAT-114, jv,09-12-11 16:01,modification to pom files to ignore things in m2e
+RAT-114, Robert Burrell Donkin,13-05-12 17:57,"Hi John
+
+Apologies for taking a while to look at this one...
+
+Committed. Many thanks for the patch."
+RAT-116, Robert Burrell Donkin,13-05-12 17:34,"+1
+
+Rob"
+RAT-116, Dennis Lundberg,04-11-12 18:30,"Documentation updated in r1405598 to better show what is excluded
+http://svn.apache.org/viewvc?view=revision&revision=1405598
+
+We should probably open new issues if we want to exclude more files by default."
+RAT-117, Philipp Ottlinger,18-06-12 19:09,Patched pom that makes mvn clean install run through.
+RAT-117, Philipp Ottlinger,18-06-12 19:10,Since there's no component tentacles I filed the bug here (relates to email on mailing list from 2012-06-18) - sorry.
+RAT-117, Robert Burrell Donkin,30-06-12 10:36,"Thanks for recording the bug here. 
+
+I lack project creation karma for JIRA, so I've opened an issue. We can move the bug later."
+RAT-117, Robert Burrell Donkin,30-06-12 10:46,Applied. Many thanks for supplying the patch.
+RAT-120, Olivier Lamy (*$^¨%`£),26-09-12 21:15,really simplify verify.bsh with a verify.groovy
+RAT-120, Robert Burrell Donkin,29-09-12 18:55,Applied (as part of RAT-122). Many thanks for the patch.
+RAT-121, Olivier Lamy (*$^¨%`£),26-09-12 21:37,NOTE: patch for RAT-120 include.
+RAT-121, Robert Burrell Donkin,29-09-12 18:55,Applied (as part of RAT-122). Many thanks for the patch.
+RAT-122, Olivier Lamy (*$^¨%`£),26-09-12 22:44,"NOTE it include RAT-120 and RAT-121.
+Could you guys ask for a git mirroring ? I will be easy for more for providing different patches."
+RAT-122, Robert Burrell Donkin,29-09-12 18:35,Thanks for raising https://issues.apache.org/jira/browse/INFRA-5328
+RAT-122, Robert Burrell Donkin,29-09-12 18:51,(I'm going to assume that the 'missing-license' is just for your local use)
+RAT-122, Robert Burrell Donkin,29-09-12 18:55,Applied. Many thanks for the patch.
+RAT-123, Robert Burrell Donkin,07-11-12 21:24,Reworked main page
+RAT-124, Dennis Lundberg,04-11-12 17:58,"Fixed in r1405594
+http://svn.apache.org/viewvc?view=revision&revision=1405594"
+RAT-126, Robert Burrell Donkin,19-02-13 19:47,"Hi Bernd
+
+We're pushing towards releasing Apache Rat 0.9 very soon. If you could supply a patch including appropriate tests, we might be able to squeeze a fix in. Otherwise, it will probably need to wait until 0.10 (though I hope we'll be able to release more often in the new future).
+
+Robert"
+RAT-126, Bernd Eckenfels,21-02-13 2:34,"Hello, I just noticed that according to the Source and Comments the defaultExcludes should already contain .git. And the defaultExcludes are also turned on bye default. At least this is what the -X debug run of Maven tells me. But still it says ""No Excludes"". So I am a bit confused. Maybe it was fixed since 0.8 (there are some changes but no obvious fix). Can anybody confirm that the excludes feature is excluding any default directorries?
+
+[DEBUG] Configuring mojo 'org.apache.rat:apache-rat-plugin:0.8:check' with basic configurator -->
+[DEBUG]   (f) addDefaultLicenseMatchers = true
+[DEBUG]   (f) addLicenseHeaders = false
+[DEBUG]   (f) basedir = C:\ws\github\proj
+[DEBUG]   (f) excludeSubProjects = true
+[DEBUG]   (f) numUnapprovedLicenses = 0
+[DEBUG]   (f) reportFile = C:\ws\github\proj\target\rat.txt
+[DEBUG]   (f) reportStyle = plain
+[DEBUG]   (f) useDefaultExcludes = true              # should match .git
+[DEBUG]   (f) useEclipseDefaultExcludes = true   # should match .project
+[DEBUG]   (f) useIdeaDefaultExcludes = true
+[DEBUG]   (f) useMavenDefaultExcludes = true
+[DEBUG] – end configuration –
+[INFO] No excludes
+
+The default list in plexus DirectoryScanner includes:
+
+        ""*/~"", ""*/##"", ""*/.#"", ""*/%%"", ""*/._"",
+        // CVS
+        ""*/CVS"", ""/CVS/"", ""*/.cvsignore"",
+        // RCS
+        ""*/RCS"", ""/RCS/*"",
+        // SCCS
+        ""*/SCCS"", ""/SCCS/*"",
+        // Visual SourceSafe
+        ""**/vssver.scc"",
+        // MKS
+        ""**/project.pj"",
+        // Subversion
+        ""*/.svn"", ""/.svn/*"",
+        // Arch
+        ""*/.arch-ids"", ""/.arch-ids/*"",
+        //Bazaar
+        ""*/.bzr"", ""/.bzr/*"",
+        //SurroundSCM
+        ""**/.MySCMServerInfo"",
+        // Mac
+        ""**/.DS_Store"",
+        // Serena Dimensions Version 10
+        ""*/.metadata"", ""/.metadata/*"",
+        // Mercurial
+        ""*/.hg"", ""/.hg/*"",
+        // git
+        ""*/.git"", ""/.gitignore"", ""/.gitattributes"", ""/.git/*"",
+        // BitKeeper
+        ""*/BitKeeper"", ""/BitKeeper/"", ""/ChangeSet"", ""/ChangeSet/*"",
+        // darcs
+        ""*/_darcs"", ""/_darcs/"", ""/.darcsrepo"", ""/.darcsrepo/"", ""/-darcs-backup"", ""**/.darcs-temp-mail"" };
+
+Any idea?"
+RAT-126, Robert Burrell Donkin,26-02-13 20:40,"Executing a freshly built 0.9-SNAPSHOT from the command line also indicates that there are no excludes:
+
+$ mvn org.apache.rat:apache-rat-plugin:0.9-SNAPSHOT:check
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building some-project 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] — apache-rat-plugin:0.9-SNAPSHOT:check (default-cli) @ some-project —
+[INFO] No excludes
+[INFO] Rat check: Summary of files. Unapproved: 3 unknown: 3 generated: 0 approved: 0 licence.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 2.673s
+[INFO] Finished at: Tue Feb 26 20:38:26 GMT 2013
+[INFO] Final Memory: 6M/245M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.rat:apache-rat-plugin:0.9-SNAPSHOT:check (default-cli) on project some-project: Too many files with unapproved license: 3 See RAT report in: /opt/development/2012/kata/temp/some-project/target/rat.txt -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException"
+RAT-126, Robert Burrell Donkin,26-02-13 21:32,"The 'No excludes' message is quite confusing. I've improved this message and added extra debug logging. 
+
+For me, mvn org.apache.rat:apache-rat-plugin:0.9-SNAPSHOT:check now ignores the .git/ directory, via plexus DirectoryScanner.DEFAULTEXCLUDES. I'm using mvn 3.0.5.
+
+So, I think this might be fixed. Please retest once the release candidate is available."
+RAT-126, Bernd Eckenfels,26-02-13 22:03,"The fix looks good, it (suddenly?) also ignores the .git directory. BTW: I wonder if it is better to list only ignored resources instead of the exclude patterns. Especially for the number printed this is much more interesting."
+RAT-126, Robert Burrell Donkin,27-02-13 20:46,"Good - the plexus dependency has been updated for this release, which is where the standard 
+
+I found printing the excludes useful for debugging, but yes, listing the ignored resources sounds useful. I'll see if it would be easy and safe to add before the release."
+RAT-126, Olivier Lamy (*$^¨%`£),27-02-13 20:52,"yup 3.0.10 include more default excludes (for git) and more performant for directories scanning.
+And backward compatible"
+RAT-126, Robert Burrell Donkin,27-02-13 21:07,"I've committed a patch which prints those resources excluded and those included, for example
+
+[DEBUG] Adding plexus default exclusions...
+[DEBUG] Adding exclusions often needed by Maven projects...
+[DEBUG] Adding exclusions often needed by projects developed in Eclipse...
+[DEBUG] Adding exclusions often needed by projects developed in IDEA...
+[DEBUG] Finished creating list of implicit excludes.
+[INFO] 51 implicit excludes (use -debug for more details).
+[DEBUG] Implicit exclude: */~
+[DEBUG] Implicit exclude: */##
+[DEBUG] Implicit exclude: */.#
+[DEBUG] Implicit exclude: */%%
+[DEBUG] Implicit exclude: */._
+[DEBUG] Implicit exclude: **/CVS
+[DEBUG] Implicit exclude: */CVS/*
+[DEBUG] Implicit exclude: **/.cvsignore
+[DEBUG] Implicit exclude: **/RCS
+[DEBUG] Implicit exclude: */RCS/*
+[DEBUG] Implicit exclude: **/SCCS
+[DEBUG] Implicit exclude: */SCCS/*
+[DEBUG] Implicit exclude: **/vssver.scc
+[DEBUG] Implicit exclude: **/project.pj
+[DEBUG] Implicit exclude: **/.svn
+[DEBUG] Implicit exclude: */.svn/*
+[DEBUG] Implicit exclude: **/.arch-ids
+[DEBUG] Implicit exclude: */.arch-ids/*
+[DEBUG] Implicit exclude: **/.bzr
+[DEBUG] Implicit exclude: */.bzr/*
+[DEBUG] Implicit exclude: **/.MySCMServerInfo
+[DEBUG] Implicit exclude: **/.DS_Store
+[DEBUG] Implicit exclude: **/.metadata
+[DEBUG] Implicit exclude: */.metadata/*
+[DEBUG] Implicit exclude: **/.hg
+[DEBUG] Implicit exclude: */.hg/*
+[DEBUG] Implicit exclude: **/.git
+[DEBUG] Implicit exclude: **/.gitignore
+[DEBUG] Implicit exclude: **/.gitattributes
+[DEBUG] Implicit exclude: */.git/*
+[DEBUG] Implicit exclude: **/BitKeeper
+[DEBUG] Implicit exclude: */BitKeeper/*
+[DEBUG] Implicit exclude: **/ChangeSet
+[DEBUG] Implicit exclude: */ChangeSet/*
+[DEBUG] Implicit exclude: **/_darcs
+[DEBUG] Implicit exclude: */_darcs/*
+[DEBUG] Implicit exclude: **/.darcsrepo
+[DEBUG] Implicit exclude: */.darcsrepo/*
+[DEBUG] Implicit exclude: */-darcs-backup
+[DEBUG] Implicit exclude: **/.darcs-temp-mail
+[DEBUG] Implicit exclude: target/*/
+[DEBUG] Implicit exclude: cobertura.ser
+[DEBUG] Implicit exclude: release.properties
+[DEBUG] Implicit exclude: pom.xml.releaseBackup
+[DEBUG] Implicit exclude: .classpath
+[DEBUG] Implicit exclude: .project
+[DEBUG] Implicit exclude: .settings/*/
+[DEBUG] Implicit exclude: *.iml
+[DEBUG] Implicit exclude: *.ipr
+[DEBUG] Implicit exclude: *.iws
+[DEBUG] Implicit exclude: .idea/*/
+[INFO] No excludes explicitly specified.
+[DEBUG] Excluded 13 resources:
+[DEBUG]  - excluded target/rat.txt
+[DEBUG]  - excluded .git/info/exclude
+[DEBUG]  - excluded .git/config
+[DEBUG]  - excluded .git/hooks/applypatch-msg.sample
+[DEBUG]  - excluded .git/hooks/pre-rebase.sample
+[DEBUG]  - excluded .git/hooks/update.sample
+[DEBUG]  - excluded .git/hooks/commit-msg.sample
+[DEBUG]  - excluded .git/hooks/pre-commit.sample
+[DEBUG]  - excluded .git/hooks/pre-applypatch.sample
+[DEBUG]  - excluded .git/hooks/post-update.sample
+[DEBUG]  - excluded .git/hooks/prepare-commit-msg.sample
+[DEBUG]  - excluded .git/HEAD
+[DEBUG]  - excluded .git/description
+[INFO] 3 resources included
+[DEBUG]  - included src/test/java/org/example/AppTest.java
+[DEBUG]  - included src/main/java/org/example/App.java
+[DEBUG]  - included pom.xml
+[INFO] Rat check: Summary of files. Unapproved: 0 unknown: 0 generated: 0 approved: 3 licence.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------"
+RAT-126, Robert Burrell Donkin,27-02-13 21:31,"Could this issue be safely marked as fixed in 0.9...?
+
+Robert"
+RAT-126, Robert Burrell Donkin,02-03-13 7:46,I think this is fixed by the upgrade to the plexus dependency. Please reopen if not.
+RAT-128, David Crossley,03-03-13 2:51,"Here are some useful recent discussion points:
+
+http://mail-archives.apache.org/mod_mbox/www-legal-discuss/201302.mbox/%3C5122B834.40401@shanecurcuru.org%3E
+
+http://mail-archives.apache.org/mod_mbox/www-legal-discuss/201302.mbox/%3CCD48D6D3.8DA73%25podence@blackducksoftware.com%3E"
+RAT-128, Sebb,20-05-13 18:30,"Fixed some instances:
+
+URL: http://svn.apache.org/r1484543
+Log:
+RAT-128 Use the proper name for Apache License
+
+Modified:
+    creadur/rat/trunk/apache-rat-core/src/main/java/org/apache/rat/analysis/license/ApacheSoftwareLicense20.java
+    creadur/rat/trunk/apache-rat-core/src/main/java/org/apache/rat/annotation/ApacheV2LicenceAppender.java
+
+URL: http://svn.apache.org/r1484549
+Log:
+RAT-128 Use the proper name for Apache License
+
+Modified:
+    creadur/rat/trunk/apache-rat-plugin/src/site/apt/examples/custom-license.apt.vm
+
+However ""Software"" is used in some class names:
+
+ApacheSoftwareLicense20
+AppliedApacheSoftwareLicense20
+
+which is unfortunate.
+
+Also ASL is used in various public variables."
+RAT-128, Sebb,20-05-13 18:42,"URL: http://svn.apache.org/r1484559
+Log:
+RAT-128 Use the proper name for Apache License
+
+Added:
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedAL20/
+
+	copied from r1484335, creadur/rat/trunk/apache-rat-core/src/test/resources/appliedASL20/
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedAL20/bad/aal20bad1.txt
+	copied unchanged from r1484335, creadur/rat/trunk/apache-rat-core/src/test/resources/appliedASL20/bad/aasl20bad1.txt
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedAL20/bad/aal20bad2.txt
+	copied unchanged from r1484335, creadur/rat/trunk/apache-rat-core/src/test/resources/appliedASL20/bad/aasl20bad2.txt
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedAL20/good/aal20good1.txt
+	copied unchanged from r1484335, creadur/rat/trunk/apache-rat-core/src/test/resources/appliedASL20/good/aasl20good1.txt
+Removed:
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedAL20/bad/aasl20bad1.txt
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedAL20/bad/aasl20bad2.txt
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedAL20/good/aasl20good1.txt
+    creadur/rat/trunk/apache-rat-core/src/test/resources/appliedASL20/
+Modified:
+    creadur/rat/trunk/RELEASE_NOTES.txt
+    creadur/rat/trunk/apache-rat-core/src/main/java/org/apache/rat/analysis/license/AppliedApacheSoftwareLicense20.java
+    creadur/rat/trunk/apache-rat-core/src/test/java/org/apache/rat/ReportTest.java
+    creadur/rat/trunk/apache-rat-core/src/test/java/org/apache/rat/analysis/license/AppliedApacheSoftwareLicense20Test.java
+    creadur/rat/trunk/apache-rat-core/src/test/java/org/apache/rat/policy/DefaultPolicyTest.java
+    creadur/rat/trunk/apache-rat-core/src/test/java/org/apache/rat/report/xml/XmlReportTest.java
+    creadur/rat/trunk/apache-rat-core/src/test/resources/elements/Source.java
+    creadur/rat/trunk/apache-rat-plugin/src/test/java/org/apache/rat/mp/RatCheckMojoTest.java
+    creadur/rat/trunk/apache-rat-tasks/src/test/java/org/apache/rat/anttasks/ReportTest.java
+    creadur/rat/trunk/apache-rat-tasks/src/test/resources/antunit/report-junit.xml
+    creadur/rat/trunk/apache-rat-tasks/src/test/resources/antunit/report-normal-operation.xml"
+RAT-135, Dennis Lundberg,26-11-13 18:56,Fixed in r1545782.
+RAT-137, Sebb,15-05-13 0:38,Also http://creadur.apache.org/rat/apache-rat-plugin/examples/basic.html
+RAT-137, Sebb,20-05-13 19:22,"URL: http://svn.apache.org/r1484565
+Log:
+RAT-137 Website shows incorrect Maven goals in some pages
+
+Modified:
+    creadur/rat/trunk/apache-rat-plugin/src/site/apt/examples/basic.apt.vm
+    creadur/rat/trunk/apache-rat-plugin/src/site/apt/index.apt
+    creadur/rat/trunk/apache-rat-plugin/src/site/apt/usage.apt.vm
+
+URL: http://svn.apache.org/r1484568
+Log:
+RAT-137 Website shows incorrect Maven goals in some pages
+
+Modified:
+    creadur/rat/trunk/apache-rat-plugin/src/site/fml/faq.fml
+
+Website not yet rebuilt"
+RAT-137, Dennis Lundberg,06-09-14 20:32,This has been fixed and the site has been deployed.
+RAT-140, Sebb,19-05-13 1:39,"URL: http://svn.apache.org/r1484206
+Log:
+RAT-140 OASISLicense allows invalid Copyright line
+
+Modified:
+    creadur/rat/trunk/apache-rat-core/src/main/java/org/apache/rat/analysis/license/OASISLicense.java"
+RAT-144, Philipp Ottlinger,30-07-14 20:38,Refactored arrays into lists in rev1614759.
+RAT-145, Sebb,21-07-13 23:20,"URL: http://svn.apache.org/r1505508
+Log:
+RAT-145 - Maven plugin should not run in the ""verify"" phase, but in the ""validate"" phase
+
+Modified:
+    creadur/rat/trunk/RELEASE_NOTES.txt
+    creadur/rat/trunk/apache-rat-plugin/src/main/java/org/apache/rat/mp/RatCheckMojo.java"
+RAT-148, Philipp Ottlinger,23-07-14 22:04,Checked in as rev1612959. Thanks for reporting this issue.
+RAT-148, Chris A. Mattmann,25-07-14 14:37,Thank you!
+RAT-151, Dennis Lundberg,26-11-13 18:39,Fixed in r1545767.
+RAT-152, Dennis Lundberg,26-11-13 18:39,Fixed in r1545772.
+RAT-153, Dennis Lundberg,26-11-13 18:54,Fixed in r1545775.
+RAT-154, Dennis Lundberg,26-11-13 18:54,Fixed in r1545780.
+RAT-155, Dennis Lundberg,26-11-13 19:04,Fixed in r1545785.
+RAT-156, Dennis Lundberg,26-11-13 19:14,Fixed in r1545788.
+RAT-158, Richard Eckart de Castilho,31-03-14 8:47,"Having such warnings now too on JDK 8 with rat 0.10:
+
+Java:
+
+
+java version ""1.8.0""
+Java(TM) SE Runtime Environment (build 1.8.0-b132)
+Java HotSpot(TM) 64-Bit Server VM (build 25.0-b70, mixed mode)
+
+
+
+Maven:
+
+
+Apache Maven 3.2.1 (ea8b2b07643dbb1b84b6d16e1f08391b666bc1e9; 2014-02-14T18:37:52+01:00)
+Maven home: /usr/local/share/java/maven
+Java version: 1.8.0, vendor: Oracle Corporation
+Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: ""mac os x"", version: ""10.9.2"", arch: ""x86_64"", family: ""mac""
+
+
+
+Log:
+
+
+Warning:  org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+Compiler warnings:
+  WARNING:  'org.apache.xerces.jaxp.SAXParserImpl: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.'
+Warning:  org.apache.xerces.parsers.SAXParser: Feature 'http://javax.xml.XMLConstants/feature/secure-processing' is not recognized.
+Warning:  org.apache.xerces.parsers.SAXParser: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.
+Warning:  org.apache.xerces.parsers.SAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized."
+RAT-158, Sebb,31-03-14 15:41,"As far as I can tell, this is nothing to do with RAT."
+RAT-158, John Vines,31-03-14 17:51,"It only occurs when I use the rat plugin, which leads me to point to your project. Apache Taglibs seems to agree http://mail-archives.apache.org/mod_mbox/tomcat-dev/201311.mbox/%3C5287C162.6030208@kippdata.de%3E"
+RAT-158, Sebb,31-03-14 22:57,"RAT is used extensively elsewhere without issues as far as I know.
+
+It does not have a direct dependency on xerces.
+However, the plugin code does depend on doxia which in turn depends on xerces.
+The doxia module is part of Maven.
+Probably worth asking on the Maven user list."
+RAT-158, Christofer Dutz,11-05-14 19:11,"Experiancing the same error message ... as soon as I add the plugin to my build, and execute ""apache-rat:check"" I get the exact same error.
+
+My Environment is Windows 7 64bit with Java 1.7.0_45 64bit using Maven 3.0.5 (But getting the same error on 3.1.1)"
+RAT-158, Dennis Lundberg,22-07-14 14:55,"Confirmed on Windows 7 with Maven 3.0.5 using Java 1.7.0_60 and Java 1.8.0_05.
+Cannot reproduce using Java 1.6.0_45. All versions are 64-bit."
+RAT-158, Philipp Ottlinger,23-07-14 21:59,"Confirmed on Ubuntu 14.04, mvn 3.2.1, JDK 1.8.0.11 64bit."
+RAT-158, Dennis Lundberg,13-08-14 14:19,"This java bug seems to be related:
+http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8016153"
+RAT-158, Philipp Ottlinger,18-08-14 20:45,"Following 
+
+	https://blogs.oracle.com/joew/entry/jdk_7u45_aws_issue_123
+	http://docs.oracle.com/javase/tutorial/jaxp/limits/limits.html
+	http://docs.oracle.com/javase/tutorial/jaxp/properties/properties.html
+and defining a jaxp.properties didn't help to get rid of the compiler warnings."
+RAT-158, Dennis Lundberg,19-08-14 11:53,"Hi Phillipp,
+
+I don't think that is the problem described in this issue. The problem is not that the value of the limit property is wrong, but rather that the newer JDKs are setting properties that Xerces don't know about. I had a look in the latest release of Xerces and the problem is still there, so upgrading to that version will not work."
+RAT-158, Bernd Eckenfels,20-12-14 7:38,"I see the same problem with commons VFS site builds (using RAT) with recent Java 7 and 8. I wonder, why is external used/needed here anyway?"
+RAT-158, Christopher Tubbs,11-02-15 20:47,"I was able to get this to work, but I don't know if it works in all situations:
+
+
+<plugin>
+  <groupId>org.apache.rat</groupId>
+  <artifactId>apache-rat-plugin</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.doxia</groupId>
+      <artifactId>doxia-core</artifactId>
+      <version>1.6</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+</plugin>"
+RAT-158, Hervé Boutemy,14-02-15 1:51,"Thank you Christopher: you found the cause and immediate workaround!
+
+I opened a Jira issue at Doxia to remove this nasty dependency in Doxia: http://jira.codehaus.org/browse/DOXIA-526
+
+It would be nice if next Rat version could implement the workaround, even if Doxia is not yet released with the fix at root cause"
+RAT-158, Hervé Boutemy,14-02-15 2:04,notice the workaround is now part of the future asf parent pom version 17: see MPOM-69
+RAT-158, Hervé Boutemy,14-02-15 8:34,patch attached: please some rat dev apply it
+RAT-158, Sebb,15-02-15 16:24,"The patch won't be needed once the Apache Pom is re-released.
+Alternatively it won't be needed if Doxia is released with the fix.
+
+So I don't think it makes sense to apply the patch yet.
+Maybe do so just before RAT is released, assuming the underlying issue has not yet been fixed."
+RAT-158, Hervé Boutemy,15-02-15 16:32,"Doxia doesn't have much activity these time
+and looking at Rat and Doxia roadmaps in respective Jira, I hope for Rat that there will be a Rat release before Doxia release"
+RAT-158, Philipp Ottlinger,15-02-15 16:33,"Thanks for providing the patch - I've applied it due to the same reasons 
+
+In case a doxia update is about the happen, we can remove the exclusion later."
+RAT-158, Sebb,15-02-15 16:41,Also need to remove the exclusion if the Apache pom is released before RAT.
+RAT-158, Sebb,15-02-15 23:59,Patch does not solve issue for reports.
+RAT-158, Hervé Boutemy,18-02-15 23:27,"for rat report, Rat Maven plugin can't do anything: xerces dependency, even if not included by the plugin, if found in maven-site-plugin
+Once Doxia is fixed and maven-site-plugin upgrades, fix in Rat Maven plugin will be useful
+
+here is an update for the plugin IT to show report and maven-site-plugin workaround"
+RAT-158, Hudson,19-02-15 0:10,"SUCCESS: Integrated in ASF Parent Pom #119 (See https://builds.apache.org/job/ASF%20Parent%20Pom/119/)
+RAT-158 remove Xerces in m-site-p too to avoid RAT-158 in reporting (hboutemy: http://svn.apache.org/viewvc/?view=rev&rev=1660764)
+
+	/maven/pom/trunk/asf/pom.xml"
+RAT-158, Sebb,19-02-15 1:14,"Once Dothxia is fixed and maven-site-plugin upgrades, fix in Rat Maven plugin will be useful
+
+Surely once Doxia is fixed and the site plugin has been upgraded, there is no need to change RAT at all?
+
+I don't see the point of a fix that does not solve the problem for the main use case, which is RAT being used as part of a site report.
+
+There might be a case for adding a work-round to RAT if - and only if - this would solve problem for reports as well as for CLI usage.
+
+But the proper solution is to fix Doxia."
+RAT-158, Hervé Boutemy,19-02-15 6:40,"RAT can be used either as a report (apache-rat:rat) or a mojo (apache-rat:check): in Maven project, for example, we use the mojo (check) only to fail the build in case of non-compliance and I didn't even notice about the report.
+
+the proper solution starts with fixing Doxia, true: then everybody has to use the fixed Doxia, ie maven site plugin and RAT maven plugin
+And before Doxia is fixed, using the dependency exclusion workaround on any old non-fixed Doxia version has exactly the same result than using fixed Doxia: great, Doxia users don't absolutely require to wait for the fix, they have a simple, now documented, workaround
+
+1. if maven site plugin uses fixed Doxia but RAT maven plugin continue to use non-fixed Doxia,
+RAT maven plugin will continue to import (through non-fixed Doxia) Xerces causing unwanted warnings (and this will happen both as mojo and report)
+
+2. if RAT maven plugin uses fixed Doxia but maven site plugin continue to use non-fixed Doxia,
+since maven site plugin injects its dependencies into every reports, it will inject non-fixed Doxia into RAT maven plugin report: there will be unwanted warnings with RAT report (caused by maven site plugin, caused by Doxia, caused by Xerces), but not with RAT mojo (which is independent from maven site plugin: nothing is injected)
+
+then BOTH maven site plugin AND RAT maven plugin must use the fixed Doxia version (or use the Xerces exclusion wrokaround with a non-fixed Doxia)
+
+That's why I added the maven site plugin configuration workaround in last patch, to show the result (and I updated ASF parent pom too in MPOM-69)
+
+I hope the full explanations are now clear for people wanting to understand why and not only care on ""it works"" without precisely knowing the details"
+RAT-158, Sebb,19-02-15 15:48,"The second patch (dated Wed 18 Feb) applies to the IT test code only - that does not make sense to me.
+
+If the patch is to apply to other uses of RAT, surely it needs to be applied to the poms that are released with RAT?"
+RAT-158, Hervé Boutemy,20-02-15 2:38,"yes, the patch applies to the IT test code only: that does make sense to me, since I did not find any IT testing the report inside a site (notice there is still no IT testing the report as mojo)
+
+the patch shows what other users of RAT can do to avoid the warning when they use RAT inside their site: no generic patch can be created for that, since it has to be done on user's pom.xml
+
+but, for sure, you can totally ignore the second patch, since it does not give any real fix on RAT: RAT is now fixed (with the dependency exclusion workaround), even if the report inside a site generation still generates warning.
+
+Apply the second patch or not won't change anything: but you can close this issue since you can't do anything more on the topic in RAT code"
+RAT-158, Sebb,23-02-15 17:28,"I see now.
+
+Fixing the IT so that invokes the ""site"" goal without generating the warning is useful as a test of the patch which can be applied to user poms.
+However it's unlikely that users will read the IT to find this work-round; this information needs to be published somewhere that users will find it.
+For example, in the Release Notes or on the website.
+
+It may be useful to add another IT which exhibits the warning, so it becomes clear when the underlying problem has been fixed."
+RAT-158, Christopher Tubbs,23-02-16 16:31,"It appears that DOXIA-526 removed the xerces dependency in 1.7 (which is now released).
+RAT 0.12 should update to use doxia-core:1.7
+MPOM should update to use RAT 0.12"
+RAT-158, Philipp Ottlinger,23-02-16 22:07,"Thanks for the update - newer versions seem use a JDK that is too new for RAT 
+
+[INFO] --- maven-enforcer-plugin:1.3.1:enforce (enforce-bytecode-version) @ apache-rat-plugin ---
+[INFO] Artifact org.apache.maven.doxia:doxia-core:jar:1.7:compile contains .class compiled with incorrect version
+[INFO] Artifact org.apache.maven.doxia:doxia-logging-api:jar:1.7:compile contains .class compiled with incorrect version
+[INFO] Artifact org.apache.maven.doxia:doxia-sink-api:jar:1.7:compile contains .class compiled with incorrect version
+[WARNING] Rule 0: org.apache.maven.plugins.enforcer.EnforceBytecodeVersion failed with message:
+Found Banned Dependency: org.apache.maven.doxia:doxia-core:jar:1.7
+Found Banned Dependency: org.apache.maven.doxia:doxia-logging-api:jar:1.7
+Found Banned Dependency: org.apache.maven.doxia:doxia-sink-api:jar:1.7
+Use 'mvn dependency:tree' to locate the source of the banned dependencies.
+
+
+
+Until that decision is changed we cannot switch over to the new version.
+
+Verified with the following changes
+
+Index: apache-rat-plugin/pom.xml
+===================================================================
+--- apache-rat-plugin/pom.xml   (Revision 1731969)
++++ apache-rat-plugin/pom.xml   (Arbeitskopie)
+@@ -33,7 +33,7 @@
+   </prerequisites>
+   <properties>
+     <currentVersion>${project.version}</currentVersion>
+-    <doxiaVersion>1.6</doxiaVersion>
++    <doxiaVersion>1.7</doxiaVersion>
+     <doxiaSitetoolsVersion>1.6</doxiaSitetoolsVersion>
+   </properties>
+   <build>
+Index: pom.xml
+===================================================================
+--- pom.xml     (Revision 1731969)
++++ pom.xml     (Arbeitskopie)
+@@ -329,17 +329,11 @@
+           <artifactId>apache-rat-plugin</artifactId>
+           <!-- Must use previous version, to avoid a cyclic reference -->
+           <version>${previousRatVersion}</version>
+-          <dependencies><!-- TODO remove exclusion when upgrading to new ASF parent or doxia release (RAT-158) -->
++          <dependencies>
+             <dependency>
+               <groupId>org.apache.maven.doxia</groupId>
+               <artifactId>doxia-core</artifactId>
+-              <version>1.2</version>
+-              <exclusions>
+-                <exclusion>
+-                  <groupId>xerces</groupId>
+-                  <artifactId>xercesImpl</artifactId>
+-                </exclusion>
+-              </exclusions>
++              <version>1.7</version>
+             </dependency>
+           </dependencies>
+           <configuration>
+
+
+ and
+
+mvn clean install site:site"
+RAT-158, Christopher Tubbs,23-02-16 22:17,
+RAT-158, Hudson,01-07-16 13:43,"SUCCESS: Integrated in ASF Parent Pom #153 (See https://builds.apache.org/job/ASF%20Parent%20Pom/153/)
+MPOM-129 Upgrade apache-rat-plugin to 0.12
+ o Removed supplemental excludes for DEPENDENCIES (RAT-184)
+ o Remvoed supplemental dependencies to doxia-core (RAT-158, DOXIA-526) (khmarbaise: http://svn.apache.org/viewvc/?view=rev&rev=1750928)
+
+	pom.xml"
+RAT-159, Dennis Lundberg,07-04-14 20:20,Fixed in r1585578.
+RAT-160, Sebb,09-04-14 15:56,"You can configure the RAT plugin to exclude whatever files you want.
+
+However I don't think it makes sense to add this specific file to the default excludes."
+RAT-160, Dennis Lundberg,10-04-14 20:17,"Christopher,
+
+The way we in the Maven project use the Invoker plugin is to have the ITs copied to the target directory before running the ITs, using this parameter:
+
+<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+
+
+
+That way the build.log is tucked away somewhere under the target directory and excluded from Rat. For more info see
+http://repo1.maven.org/maven2/org/apache/maven/plugins/maven-plugins/25/maven-plugins-25.pom"
+RAT-160, Christopher Tubbs,10-04-14 21:45,"Dennis Lundberg, I'm doing the same thing. The rat check isn't failing for the plugin module. It's failing the IT test, because the project being tested as the integration test includes my plugin, and a few other standard ones, including rat, to ensure that my plugin works with all these.
+
+Example:
+
+
+myplugin/
+myplugin/pom.xml
+myplugin/src/it/test-project
+myplugin/target/test-project/pom.xml
+myplugin/target/test-project/build.log <-- problem is here
+myplugin/target/test-project/target"
+RAT-160, Dennis Lundberg,14-04-14 19:06,"Christopher Tubbs,
+
+I'm not sure I understand your structure, but the Rat plugin excludes the ""target"" directory by default. So it should not be checked by Rat at all. Could you share you configuration?"
+RAT-160, Christopher Tubbs,14-04-14 19:45,"Dennis Lundberg: Here's an example project to demonstrate the issue: https://github.com/ctubbsii/test-maven-plugin based on the maven-plugin archetype.
+
+Note that the check-licenses-outer execution of the RAT plugin succeeds fine, but the check-licenses-inner execution (the one in the IT project itself) does not. Note that the invoker plugin creates two target directories. The outer one is for the plugin project. The inner one is for the IT project, meant to test the plugin."
+RAT-160, Dennis Lundberg,14-04-14 19:56,"Thanks, now I see more clearly.
+
+Why do you have the check-licenses-inner execution?
+The check-licenses-outer execution covers the main project, including all its IT projects."
+RAT-160, Christopher Tubbs,14-04-14 21:09,"This is just an example. In the real case, I want the IT to inherit from a parent POM which defines an execution of the RAT plugin, to specifically test my plugin in the environment of that parent POM."
+RAT-160, Dennis Lundberg,24-04-14 17:26,"Christopher,
+
+Sorry, you lost me again. Do you think you can put together a sample project structure that resembles what you want to do.
+
+What do you want to do with Rat? Do you want it to check your code for license headers? If so you'll only ever need one execution."
+RAT-160, Christopher Tubbs,24-04-14 20:09,"If so you'll only ever need one execution.
+
+There is only one relevant execution... on the invoked project.
+
+Do you think you can put together a sample project structure that resembles what you want to do.
+
+The example code above is precisely the project structure I'm talking about. The only slight variation to that, which is where the invoked project's source code might live before they are copied for invocation by the maven-invoker-plugin. It was simply an attempt to explain that there are more use cases than simply invoking a plugin for integration testing.
+
+Example: Projects A, B, C, and D are all separate independent projects. They all build fine, all execute RAT, and RAT passes without issue. Now, consider another project, P, which incorporates projects A, B, C, and D. Before it can do that, it needs to build them from source, so it executes a plugin to clone each of the other repos for A, B, C, and D, and build them using the maven-invoker-plugin. Now, this case, the RAT check inside A, B, C, and D will fail, because the invoker plugin creates an extra build.log file in each project directory.
+
+This example is exactly the same as the provided example project above. The only difference is that the invoker plugin is executing projects whose source code exists their own repos, instead of being contained in this one. This project, P, has no idea that they are executing the RAT plugin when they build, nor should it care. Project P has no knowledge of RAT, or its configuration. The problem is, RAT fails in the invoked project because it doesn't expect this build.log file to show up when the project's build is invoked.
+
+What I was trying to say above is that I may have many projects that do this: P1, P2, P3, which each invoke the build of A, B, C, and D in different environments.
+
+The more I think about it, the more this sounds like a problem with the maven-invoker-plugin... it shouldn't be creating this file in the source directory of the invoked project. But, I still think there's a case here for the RAT plugin to ignore it."
+RAT-160, Christopher Tubbs,24-04-14 20:10,My point is that the outer project does not even have to execute RAT for the problem to exist. The problem exists whenever a RAT-executing project is invoked by the maven-invoker-plugin.
+RAT-160, Christopher Tubbs,08-04-15 23:36,"This issue is extremely similar to RAT-185, only instead of the problem occurring in a specific Jenkins configuration, it's occurring in the environment of default maven-invoker-plugin configuration, and instead of .repository, the problematic file is build.log."
+RAT-160, Karl Heinz Marbaise,09-04-15 11:06,"What i don't understand why you have configured apache-rat plugin in your integration test, cause the intention of your IT is to test the plugin you are developing and not the apache-rat plugin. The other questions came across this is where would you locate the build.log otherwise? You could make a good suggestion in the jira for maven-invoker-pugin..."
+RAT-160, Jochen Wiedmann,09-04-15 11:19,"@Karl Heinz Marbaise: That's certainly not the issue. The invocation might occur within a ""release"" profile, or the like.
+
+The easiest reply is certainly the configuration of an exception for build.log. However, judging from the conversation so far, I'd a"
+RAT-160, Christopher Tubbs,09-04-15 17:25,"Karl Heinz Marbaise: as pointed out earlier in the thread (and demonstrated by the example project provided), the apache-rat-plugin was not configured in the integration test. Rather, it is inherited by the parent pom.
+
+The issue is independent of the fact that it's an integration test (that just happens to be the way I was running the invoker plugin). It can occur whenever the maven-invoker-plugin executes a project that has rat in its build, just like RAT-185 can occur whenever Jenkins executes a project that has rat in its build."
+RAT-160, Christopher Tubbs,09-04-15 17:35,"Jochen Wiedmann: I don't know about other cases, but in my case, I wouldn't want to configure an exception in the parent POM... because I don't expect any build.log files which don't have license headers to show up in my modules. For my case, I only expect it to occur in my maven-invoker-plugin executed builds which some of my modules do during testing.
+
+The best workaround I've found so far (short of telling maven-invoker-plugin not to create a build.log file) is to create a profile which configures rat to exclude build.log, and activate this profile only when maven-invoker-plugin executes the build."
+RAT-160, Philipp Ottlinger,13-04-15 19:22,"Thanks for your example project. I've added some minor modification when evaluating your bug report.
+
+I'd personally file a bug in the maven-invoker-plugin to make the creation of a logfile optional or to put it in a different location under /target as proposed earlier. A build.log generated during maven-invoker-plugin runs should pollute your project's basedir.
+RAT puts it rat.txt under target as well.
+
+On the other hand a fix is fairly easy to implement. Though I hesitate to add 
+
+**/build.log 
+
+
+to the default excludes.
+
+Would a plain
+
+build.log
+
+
+ be okay for you?"
+RAT-160, Christopher Tubbs,13-04-15 21:02,"I agree that **/build.log would be too much. A plain build.log should be sufficient. maven-invoker-plugin does have the ability to suppress creating build.log (that's my current workaround, but that information is too valuable to make that permanent). I will file an issue to make the location of the build.log file more configurable, or to put it in a different location by default."
+RAT-160, Philipp Ottlinger,14-04-15 8:42,"Integrated build.log as a temporary fix to allow users of RAT with maven-invoker-plugin runs to work.
+
+We may revoke this once MINVOKER-190 is solved properly.
+
+Integrated in 1673389"
+RAT-168, Sebb,11-08-14 11:24,"URL: http://svn.apache.org/r1617255
+Log:
+RAT-168 Tests don't check CLI usage
+Added basic test to check rat goal
+
+Added:
+    creadur/rat/trunk/apache-rat-plugin/src/test/invoker/it4_RAT-168/
+    creadur/rat/trunk/apache-rat-plugin/src/test/invoker/it4_RAT-168/invoker.properties
+    creadur/rat/trunk/apache-rat-plugin/src/test/invoker/it4_RAT-168/pom.xml
+    creadur/rat/trunk/apache-rat-plugin/src/test/invoker/it4_RAT-168/verify.groovy
+    creadur/rat/trunk/apache-rat-plugin/src/test/it4_RAT-168/
+    creadur/rat/trunk/apache-rat-plugin/src/test/it4_RAT-168/pom.xml"
+RAT-168, Sebb,11-08-14 15:21,"URL: http://svn.apache.org/r1617307
+Log:
+RAT-168 Tests don't check CLI usage
+Parallel unit test is not needed/used
+
+Removed:
+    creadur/rat/trunk/apache-rat-plugin/src/test/it4_RAT-168/"
+RAT-169, Sebb,11-08-14 15:18,"The tests are run, but they are run by RatCheckMojoTest.java.
+
+Thus they don't appear in the output as separate integration tests"
+RAT-169, Dennis Lundberg,14-08-14 19:27,I moved the resources for these tests in r1618014 to make it more obvious that these tests are run during the unit testing phase.
+RAT-173, Chris Burroughs,10-09-14 21:12,Patch that promotes skip up to the abstract class and then has the same check in the report mojo.
+RAT-173, Philipp Ottlinger,11-09-14 21:03,"Thanks for your patch and the comment - applied in 
+r1624390"
+RAT-174, Chris Burroughs,11-09-14 14:24,"Replace expensive regex patterns with simple text checks
+
+With this change `apache-rat:rat` is approxiatly the same speed with and without CDDL1License checks enabled instead of being an order of magnitude slower.
+
+Note: When developing I noticed that Illumos (the most prominent CDDL project I am aware of) uses a slightly different string than what was in the unit tests.  The unit tests all pass, but this is a behavior change.  For example some unrelated text and a mention of `https://oss.oracle.com/licenses/CDDL` would no longer match.  I don't have enough familiarty with CDDL users to know if even wider variation is common."
+RAT-174, Chris Burroughs,02-10-14 13:43,"I'd like ot make Rat a mandatory part of our build process to catch issues earlier, but inceasing build time by ~6minutues is non-starter.  Pleaes let me know if there is anything else I can provide to help review the patch."
+RAT-174, Philipp Ottlinger,03-10-14 21:04,"Thanks for your patch - let's see if CDDL-users experience regressions or changes in RAT runs.
+
+Applied in r1629321"
+RAT-175, Sebb,16-09-14 10:42,"URL: http://svn.apache.org/r1625239
+Log:
+RAT-175 - SourceCodeManagementSystems.hasIgnoreFile() should return boolean
+
+Modified:
+    creadur/rat/trunk/RELEASE_NOTES.txt
+    creadur/rat/trunk/apache-rat-core/src/main/java/org/apache/rat/config/SourceCodeManagementSystems.java"
+RAT-177, Philipp Ottlinger,16-09-14 20:24,"Sebb converted Arrays into lists and simplified code to addElements and merge defaults with configured matchers. Is that what you intended?
+r1625380"
+RAT-177, Sebb,16-09-14 21:33,"Yes, that seems fine.
+I just fixed the guessers; the arrays were only needed locally so made them private"
+RAT-179, Philipp Ottlinger,20-04-15 21:39,"Maxim Solodovnik Is your expectation that the attached project is scanned and goes through?
+
+It contains:
+
+	ASF2.0 and MIT (should be part of the defaults)
+	MIT and GPL (self-defined, added via pom.xml)
+
+
+
+Thanks for your feedback"
+RAT-179, Maxim Solodovnik,21-04-15 4:25,"Hello Philipp,
+
+Yes I expect the check should be successful,
+
+I would like to add check as part of our build and it always fails due to custom licenses (actually it is jqueryui files that are compatible with APL)"
+RAT-179, Maxim Solodovnik,19-05-15 6:23,"Just have checked: 0.12-SNAPSHOT works as expected in our maven build. Thanks!
+Will attach ant sample project shortly"
+RAT-179, Maxim Solodovnik,19-05-15 8:55,Example of Ant project
+RAT-179, Philipp Ottlinger,19-05-15 22:25,Maxim Solodovnik Thanks for your feedback and project. I integrated it into my Github examples and made it configurable for ANT as well.
+RAT-180, Philipp Ottlinger,17-09-14 21:46,"This is what I've intended with a greater flexibility to choose licenses. Maybe we just need to add some more documentation after making the default report more license-agnostic.
+
+We could insert the (list of) valid target license(s) into the report."
+RAT-180, Philipp Ottlinger,17-05-15 21:12,Sebb http://svn.apache.org/r1679901 contains your proposed changes and some other minor refactorings - are you ok with that? Thanks.
+RAT-180, Sebb,18-05-15 13:40,Updated text looks OK.
+RAT-180, Philipp Ottlinger,18-05-15 17:33,Thanks for the feedback.
+RAT-188, Philipp Ottlinger,11-11-14 21:39,"Thanks for providing the patch, seems to be fine with our Jenkins environment as well.
+
+Checked in as r1638419"
+RAT-190, Dan Dumont,19-01-15 22:48,">java -version
+java version ""1.7.0_55""
+Java(TM) SE Runtime Environment (build 1.7.0_55-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 24.55-b03, mixed mode)"
+RAT-190, Dan Dumont,19-01-15 22:49,Reproducible test case
+RAT-190, Dan Dumont,19-01-15 22:52,"Running mvn apache-rat:check will pass on the test project.
+
+The rat will correctly fail the build if you remove the excludes block, however, when you keep the excludes block and you run with -X for debug, you'll see the file in question as ""included"".
+
+Very strange."
+RAT-190, Philipp Ottlinger,20-01-15 22:20,"Hi Dan,
+
+I'm not really sure about your expectation but your pom seems to miss the correct license header.
+
+When I correct the configuration into
+
+          <licenses>
+            <license implementation=""org.apache.rat.analysis.license.SimplePatternBasedLicense"">
+              <licenseFamilyCategory>IBMCL</licenseFamilyCategory>
+              <licenseFamilyName>IBM Copyright</licenseFamilyName>
+              <notes/>
+              <patterns>
+                <pattern>Copyright IBM Corp. 2015</pattern>
+                <pattern>Copyright IBM Corp. 2014, 2015</pattern>
+                <pattern>Copyright IBM Corp. 2013, 2015</pattern>
+                <pattern>Copyright IBM Corp. 2014</pattern>
+              </patterns>
+            </license>
+          </licenses> 
+
+
+I can run the project with Java8/Mvn3 and do not get any errors with apache-rat:check and a plain call to mvn.
+
+Can you verify and/or clarify your expectations?"
+RAT-190, Philipp Ottlinger,20-01-15 22:20,A more complete pom that compiles and has a defaultGoal to build the project attached as test.zip.
+RAT-190, Dan Dumont,20-01-15 23:58,"Hi, sorry for the confusion.   The issue I'm having (even with your updated pom) is that rat is not flagging the js file in the directory.
+
+There is no line in the pom for the license in the js file and I do not understand why it' not rejecting it."
+RAT-190, Philipp Ottlinger,03-02-15 22:14,"Hi Dan Dumont,
+I'm still not clear whether I get your problem.
+
+If I use my enhanced pom and your test project I get a build failure and rat.txt contains:
+
+ !????? src/main/java/com/mycompany/app/MailComposeView.js
+ 
+*****************************************************
+ Printing headers for files without AL header...
+ 
+=======================================================================
+==src/main/java/com/mycompany/app/MailComposeView.js
+=======================================================================
+/* Copyright IBM Corp. 2014  All Rights Reserved.                    */
+...
+
+
+This happens with:
+
+Apache Maven 3.2.3 (33f8c3e1027c3ddde99d3cdebad2656a31e8fdf4; 2014-08-11T22:58:10+02:00)
+Java version: 1.7.0_65, vendor: Oracle Corporation
+and
+Java version: 1.8.0_31, vendor: Oracle Corporation
+
+
+
+In case you want to fix the recognition of your JS file you need to add another pattern to your configuration section of rat as I tried to write in my above comment:
+
+<pattern>Copyright IBM Corp. 2014</pattern>
+
+
+
+Adding this line makes RAT recognize your fail and the build goes green again.
+
+Feel free to comment - otherwise I'd close this issue as Won'tFix.
+
+Thanks"
+RAT-190, Dan Dumont,04-02-15 3:02,I suspect my maven version could be an issue.   I will try to post again tomorrow when I get a chance to look things over again.
+RAT-190, Dan Dumont,16-02-15 20:31,"I've merged your pom into my zip and I'm uploading a new version.
+You'll note that I did NOT add the correct copyright to the js file, so you should expect an error... yet..
+
+>mvn -version
+Apache Maven 3.0.5 (r01de14724cdef164cd33c7c8c2fe155faf9602da; 2013-02-19 08:51:28-0500)
+Maven home: C:\apache-maven-3.0.5\bin\..
+Java version: 1.7.0_21, vendor: Oracle Corporation
+Java home: C:\Program Files\Java\jdk1.7.0_21\jre
+Default locale: en_US, platform encoding: Cp1252
+OS name: ""windows 8"", version: ""6.2"", arch: ""amd64"", family: ""windows""
+
+
+
+
+
+[INFO]
+[INFO] --- maven-jar-plugin:2.3.2:jar (default-jar) @ test ---
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: \test\target\test-1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- apache-rat-plugin:0.11:check (default) @ test ---
+[INFO] 51 implicit excludes (use -debug for more details).
+[INFO] Exclude: *.loadrule
+[INFO] Exclude: **/.*
+[INFO] Exclude: **/.*/*
+[INFO] Exclude: **/*.json
+[INFO] Exclude: **/*.html
+[INFO] Exclude: **/*.md
+[INFO] Exclude: **/*.log
+[INFO] Exclude: **/*.mf
+[INFO] Exclude: src/site/**
+[INFO] Exclude: src/scripts/**
+[INFO] Exclude: *.obsolete/**
+[INFO] Exclude: **/test/**
+[INFO] Exclude: sequoia-crx/**
+[INFO] Exclude: shimmer-cookie-ninja/**
+[INFO] 2 resources included (use -debug for more details)
+[INFO] Rat check: Summary of files. Unapproved: 0 unknown: 0 generated: 0 approved: 1 licence.
+[INFO]
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ test ---
+[INFO] Installing \test\target\test-1.0-SNAPSHOT.jar to \.m2\repository\com\mycompany\app\test\
+1.0-SNAPSHOT\test-1.0-SNAPSHOT.jar
+[INFO] Installing \test\pom.xml to \.m2\repository\com\mycompany\app\test\1.0-SNAPSHOT\test-1.0
+-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 2.588s
+[INFO] Finished at: Mon Feb 16 15:27:37 EST 2015
+[INFO] Final Memory: 11M/151M
+[INFO] ------------------------------------------------------------------------"
+RAT-190, Dan Dumont,16-02-15 20:31,New test zip
+RAT-190, Philipp Ottlinger,16-02-15 20:34,"What mvn goal are you running?
+
+I'm still not able to reproduce the behaviour mentioned in our previous comments; running your pom yields an error with me:
+
+$ mvn --version (same behaviour with mvn 3.2.5)
+
+Apache Maven 3.2.3 (33f8c3e1027c3ddde99d3cdebad2656a31e8fdf4; 2014-08-11T22:58:10+02:00)
+Maven home: /home/user/software/maven
+Java version: 1.8.0_31, vendor: Oracle Corporation
+Java home: /home/user/jdk1.8.0_31/jre
+Default locale: de_DE, platform encoding: UTF-8
+OS name: ""linux"", version: ""3.13.0-46-generic"", arch: ""amd64"", family: ""unix""
+
+$ mvn (same result with mvn --U)
+
+[INFO] --- apache-rat-plugin:0.11:check (default) @ test ---
+[INFO] 51 implicit excludes (use -debug for more details).
+[INFO] Exclude: *.loadrule
+[INFO] Exclude: **/.*
+[INFO] Exclude: **/.*/*
+[INFO] Exclude: **/*.json
+[INFO] Exclude: **/*.html
+[INFO] Exclude: **/*.md
+[INFO] Exclude: **/*.log
+[INFO] Exclude: **/*.mf
+[INFO] Exclude: src/site/**
+[INFO] Exclude: src/scripts/**
+[INFO] Exclude: *.obsolete/**
+[INFO] Exclude: **/test/**
+[INFO] Exclude: sequoia-crx/**
+[INFO] Exclude: shimmer-cookie-ninja/**
+[INFO] 2 resources included (use -debug for more details)
+Warning:  org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+Compiler-Warnungen:
+  WARNING:  'org.apache.xerces.jaxp.SAXParserImpl: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.'
+Warning:  org.apache.xerces.parsers.SAXParser: Feature 'http://javax.xml.XMLConstants/feature/secure-processing' is not recognized.
+Warning:  org.apache.xerces.parsers.SAXParser: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.
+Warning:  org.apache.xerces.parsers.SAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+[INFO] Rat check: Summary of files. Unapproved: 1 unknown: 1 generated: 0 approved: 1 licence.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 9.542 s
+[INFO] Finished at: 2015-02-16T21:35:11+01:00
+[INFO] Final Memory: 12M/141M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.rat:apache-rat-plugin:0.11:check (default) on project test: Too many files with unapproved license: 1 See RAT report in: /tmp/a/test/target/rat.txt -> [Help 1]
+
+
+
+
+Dan Dumont: not sure if the behaviour changes with a more current JDK, but I hardly know what to do since I cannot reproduce your failure under Linux. Since I don't have a windows someone with that OS should retest. Sorry."
+RAT-190, Dan Dumont,16-02-15 20:39,"I had specified none, so the default that was added to the pom (clean install) was used.
+
+I just tested this on Maven 3.2.5 and it still succeeds."
+RAT-190, Dan Dumont,16-02-15 20:41,"This is part of the problem...   I get intermittent changes in what RAT is catching for me on my build machine....    I can't pin it down.  Sometimes changes to the code will trigger a rat error, and some won't...   very hard to nail down.
+
+I run most of my build with `clean package`.  Some of them I delete the whole jenkins workspace before a build."
+RAT-190, Dan Dumont,16-02-15 20:44,"Here's some debug (-X) output if it helps
+
+
+Apache Maven 3.0.5 (r01de14724cdef164cd33c7c8c2fe155faf9602da; 2013-02-19 08:51:28-0500)
+Maven home: C:\apache-maven-3.0.5\bin\..
+Java version: 1.7.0_21, vendor: Oracle Corporation
+Java home: C:\Program Files\Java\jdk1.7.0_21\jre
+Default locale: en_US, platform encoding: Cp1252
+OS name: ""windows 8"", version: ""6.2"", arch: ""amd64"", family: ""windows""
+[INFO] Error stacktraces are turned on.
+[DEBUG] Reading global settings from C:\apache-maven-3.0.5\bin\..\conf\settings.xml
+[DEBUG] Reading user settings from C:\Users\ddumont\.m2\settings.xml
+[DEBUG] Using local repository at C:\Users\ddumont\.m2\repository
+[DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10 for C:\Users\ddumont\.m2\repository
+[INFO] Scanning for projects...
+[DEBUG] Extension realms for project com.mycompany.app:test:jar:1.0-SNAPSHOT: (none)
+[DEBUG] Looking up lifecyle mappings for packaging jar from ClassRealm[plexus.core, parent: null]
+[DEBUG] === REACTOR BUILD PLAN ================================================
+[DEBUG] Project: com.mycompany.app:test:jar:1.0-SNAPSHOT
+[DEBUG] Tasks:   [clean, install]
+[DEBUG] Style:   Regular
+[DEBUG] =======================================================================
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building test 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] === PROJECT BUILD PLAN ================================================
+[DEBUG] Project:       com.mycompany.app:test:1.0-SNAPSHOT
+[DEBUG] Dependencies (collect): []
+[DEBUG] Dependencies (resolve): [compile, runtime, test]
+[DEBUG] Repositories (dependencies): [central (http://repo.maven.apache.org/maven2, releases)]
+[DEBUG] Repositories (plugins)     : [central (http://repo.maven.apache.org/maven2, releases)]
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-clean-plugin:2.4.1:clean (default-clean)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <directory default-value=""${project.build.directory}""/>
+  <excludeDefaultDirectories default-value=""false"">${clean.excludeDefaultDirectories}</excludeDefaultDirectories>
+  <failOnError default-value=""true"">${maven.clean.failOnError}</failOnError>
+  <followSymLinks default-value=""false"">${clean.followSymLinks}</followSymLinks>
+  <outputDirectory default-value=""${project.build.outputDirectory}""/>
+  <reportDirectory default-value=""${project.reporting.outputDirectory}""/>
+  <skip default-value=""false"">${clean.skip}</skip>
+  <testOutputDirectory default-value=""${project.build.testOutputDirectory}""/>
+  <verbose>${clean.verbose}</verbose>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:2.5:resources (default-resources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <buildFilters default-value=""${project.build.filters}""/>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <escapeString>${maven.resources.escapeString}</escapeString>
+  <escapeWindowsPaths default-value=""true"">${maven.resources.escapeWindowsPaths}</escapeWindowsPaths>
+  <includeEmptyDirs default-value=""false"">${maven.resources.includeEmptyDirs}</includeEmptyDirs>
+  <outputDirectory default-value=""${project.build.outputDirectory}""/>
+  <overwrite default-value=""false"">${maven.resources.overwrite}</overwrite>
+  <project default-value=""${project}""/>
+  <resources default-value=""${project.resources}""/>
+  <session default-value=""${session}""/>
+  <supportMultiLineFiltering default-value=""false"">${maven.resources.supportMultiLineFiltering}</supportMultiLineFiltering>
+  <useBuildFilters default-value=""true""/>
+  <useDefaultDelimiters default-value=""true""/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:2.3.2:compile (default-compile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <basedir default-value=""${basedir}""/>
+  <buildDirectory default-value=""${project.build.directory}""/>
+  <classpathElements default-value=""${project.compileClasspathElements}""/>
+  <compileSourceRoots default-value=""${project.compileSourceRoots}""/>
+  <compilerId default-value=""javac"">${maven.compiler.compilerId}</compilerId>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <debug default-value=""true"">${maven.compiler.debug}</debug>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value=""true"">${maven.compiler.failOnError}</failOnError>
+  <fork default-value=""false"">${maven.compiler.fork}</fork>
+  <generatedSourcesDirectory default-value=""${project.build.directory}/generated-sources/annotations""/>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <optimize default-value=""false"">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value=""${project.build.outputDirectory}""/>
+  <outputFileName>${project.build.finalName}</outputFileName>
+  <projectArtifact default-value=""${project.artifact}""/>
+  <session default-value=""${session}""/>
+  <showDeprecation default-value=""false"">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value=""false"">${maven.compiler.showWarnings}</showWarnings>
+  <source default-value=""1.5"">${maven.compiler.source}</source>
+  <staleMillis default-value=""0"">${lastModGranularityMs}</staleMillis>
+  <target default-value=""1.5"">${maven.compiler.target}</target>
+  <verbose default-value=""false"">${maven.compiler.verbose}</verbose>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:2.5:testResources (default-testResources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <buildFilters default-value=""${project.build.filters}""/>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <escapeString>${maven.resources.escapeString}</escapeString>
+  <escapeWindowsPaths default-value=""true"">${maven.resources.escapeWindowsPaths}</escapeWindowsPaths>
+  <includeEmptyDirs default-value=""false"">${maven.resources.includeEmptyDirs}</includeEmptyDirs>
+  <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+  <overwrite default-value=""false"">${maven.resources.overwrite}</overwrite>
+  <project default-value=""${project}""/>
+  <resources>${project.testResources}</resources>
+  <session default-value=""${session}""/>
+  <supportMultiLineFiltering default-value=""false"">${maven.resources.supportMultiLineFiltering}</supportMultiLineFiltering>
+  <useBuildFilters default-value=""true""/>
+  <useDefaultDelimiters default-value=""true""/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:2.3.2:testCompile (default-testCompile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <basedir default-value=""${basedir}""/>
+  <buildDirectory default-value=""${project.build.directory}""/>
+  <classpathElements default-value=""${project.testClasspathElements}""/>
+  <compileSourceRoots default-value=""${project.testCompileSourceRoots}""/>
+  <compilerId default-value=""javac"">${maven.compiler.compilerId}</compilerId>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <debug default-value=""true"">${maven.compiler.debug}</debug>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value=""true"">${maven.compiler.failOnError}</failOnError>
+  <fork default-value=""false"">${maven.compiler.fork}</fork>
+  <generatedTestSourcesDirectory default-value=""${project.build.directory}/generated-sources/test-annotations""/>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <optimize default-value=""false"">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value=""${project.build.testOutputDirectory}""/>
+  <outputFileName>${project.build.finalName}</outputFileName>
+  <session default-value=""${session}""/>
+  <showDeprecation default-value=""false"">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value=""false"">${maven.compiler.showWarnings}</showWarnings>
+  <skip>${maven.test.skip}</skip>
+  <source default-value=""1.5"">${maven.compiler.source}</source>
+  <staleMillis default-value=""0"">${lastModGranularityMs}</staleMillis>
+  <target default-value=""1.5"">${maven.compiler.target}</target>
+  <testSource>${maven.compiler.testSource}</testSource>
+  <testTarget>${maven.compiler.testTarget}</testTarget>
+  <verbose default-value=""false"">${maven.compiler.verbose}</verbose>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-surefire-plugin:2.10:test (default-test)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <argLine>${argLine}</argLine>
+  <basedir default-value=""${basedir}""/>
+  <childDelegation default-value=""false"">${childDelegation}</childDelegation>
+  <classesDirectory default-value=""${project.build.outputDirectory}""/>
+  <debugForkedProcess>${maven.surefire.debug}</debugForkedProcess>
+  <disableXmlReport default-value=""false"">${disableXmlReport}</disableXmlReport>
+  <enableAssertions default-value=""true"">${enableAssertions}</enableAssertions>
+  <excludedGroups>${excludedGroups}</excludedGroups>
+  <failIfNoTests>${failIfNoTests}</failIfNoTests>
+  <forkMode default-value=""once"">${forkMode}</forkMode>
+  <forkedProcessTimeoutInSeconds>${surefire.timeout}</forkedProcessTimeoutInSeconds>
+  <groups>${groups}</groups>
+  <junitArtifactName default-value=""junit:junit"">${junitArtifactName}</junitArtifactName>
+  <jvm>${jvm}</jvm>
+  <localRepository>${localRepository}</localRepository>
+  <objectFactory>${objectFactory}</objectFactory>
+  <parallel>${parallel}</parallel>
+  <parallelMavenExecution default-value=""${session.parallel}""/>
+  <perCoreThreadCount default-value=""true"">${perCoreThreadCount}</perCoreThreadCount>
+  <pluginArtifactMap>${plugin.artifactMap}</pluginArtifactMap>
+  <printSummary default-value=""true"">${surefire.printSummary}</printSummary>
+  <project default-value=""${project}""/>
+  <projectArtifactMap>${project.artifactMap}</projectArtifactMap>
+  <redirectTestOutputToFile default-value=""false"">${maven.test.redirectTestOutputToFile}</redirectTestOutputToFile>
+  <remoteRepositories>${project.pluginArtifactRepositories}</remoteRepositories>
+  <reportFormat default-value=""brief"">${surefire.reportFormat}</reportFormat>
+  <reportNameSuffix default-value="""">${surefire.reportNameSuffix}</reportNameSuffix>
+  <reportsDirectory default-value=""${project.build.directory}/surefire-reports""/>
+  <runOrder default-value=""filesystem""/>
+  <session>${session}</session>
+  <skip default-value=""false"">${maven.test.skip}</skip>
+  <skipExec>${maven.test.skip.exec}</skipExec>
+  <skipTests default-value=""false"">${skipTests}</skipTests>
+  <test>${test}</test>
+  <testClassesDirectory default-value=""${project.build.testOutputDirectory}""/>
+  <testFailureIgnore default-value=""false"">${maven.test.failure.ignore}</testFailureIgnore>
+  <testNGArtifactName default-value=""org.testng:testng"">${testNGArtifactName}</testNGArtifactName>
+  <testSourceDirectory default-value=""${project.build.testSourceDirectory}""/>
+  <threadCount>${threadCount}</threadCount>
+  <trimStackTrace default-value=""true"">${trimStackTrace}</trimStackTrace>
+  <useFile default-value=""true"">${surefire.useFile}</useFile>
+  <useManifestOnlyJar default-value=""true"">${surefire.useManifestOnlyJar}</useManifestOnlyJar>
+  <useSystemClassLoader default-value=""true"">${surefire.useSystemClassLoader}</useSystemClassLoader>
+  <useUnlimitedThreads default-value=""false"">${useUnlimitedThreads}</useUnlimitedThreads>
+  <workingDirectory>${basedir}</workingDirectory>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-jar-plugin:2.3.2:jar (default-jar)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <classesDirectory default-value=""${project.build.outputDirectory}""/>
+  <defaultManifestFile default-value=""${project.build.outputDirectory}/META-INF/MANIFEST.MF""/>
+  <finalName default-value=""${project.build.finalName}"">${jar.finalName}</finalName>
+  <forceCreation default-value=""false"">${jar.forceCreation}</forceCreation>
+  <outputDirectory default-value=""${project.build.directory}""/>
+  <project default-value=""${project}""/>
+  <useDefaultManifestFile default-value=""false"">${jar.useDefaultManifestFile}</useDefaultManifestFile>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.rat:apache-rat-plugin:0.11:check (default)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <addDefaultLicenseMatchers default-value=""true"">${rat.addDefaultLicenseMatchers}</addDefaultLicenseMatchers>
+  <addLicenseHeaders default-value=""false"">${rat.addLicenseHeaders}</addLicenseHeaders>
+  <basedir default-value=""${basedir}"">${rat.basedir}</basedir>
+  <copyrightMessage>${rat.copyrightMessage}</copyrightMessage>
+  <excludeSubProjects default-value=""true"">true</excludeSubProjects>
+  <excludes combine.children=""append"">
+    <exclude>*.loadrule</exclude>
+    <exclude>**/.*</exclude>
+    <exclude>**/.*/*</exclude>
+    <exclude>**/*.json</exclude>
+    <exclude>**/*.html</exclude>
+    <exclude>**/*.md</exclude>
+    <exclude>**/*.log</exclude>
+    <exclude>**/*.mf</exclude>
+    <exclude>src/site/**</exclude>
+    <exclude>src/scripts/**</exclude>
+    <exclude>*.obsolete/**</exclude>
+    <exclude>**/test/**</exclude>
+    <exclude>sequoia-crx/**</exclude>
+    <exclude>shimmer-cookie-ninja/**</exclude>
+  </excludes>
+  <ignoreErrors default-value=""false"">${rat.ignoreErrors}</ignoreErrors>
+  <licenseFamilies>
+    <licenseFamily implementation=""org.apache.rat.license.SimpleLicenseFamily"">
+      <familyName>IBM Copyright</familyName>
+    </licenseFamily>
+  </licenseFamilies>
+  <licenses>
+    <license implementation=""org.apache.rat.analysis.license.SimplePatternBasedLicense"">
+      <licenseFamilyCategory>IBMCL</licenseFamilyCategory>
+      <licenseFamilyName>IBM Copyright</licenseFamilyName>
+      <notes></notes>
+      <patterns>
+        <pattern>Copyright IBM Corp. 2015</pattern>
+        <pattern>Copyright IBM Corp. 2014, 2015</pattern>
+        <pattern>Copyright IBM Corp. 2013, 2015</pattern>
+      </patterns>
+    </license>
+  </licenses>
+  <numUnapprovedLicenses default-value=""0"">${rat.numUnapprovedLicenses}</numUnapprovedLicenses>
+  <project default-value=""${project}""/>
+  <reportFile default-value=""${project.build.directory}/rat.txt"">${rat.outputFile}</reportFile>
+  <reportStyle default-value=""plain"">${rat.outputStyle}</reportStyle>
+  <skip default-value=""false"">${rat.skip}</skip>
+  <useDefaultExcludes default-value=""true"">${rat.useDefaultExcludes}</useDefaultExcludes>
+  <useEclipseDefaultExcludes default-value=""true"">${rat.useEclipseDefaultExcludes}</useEclipseDefaultExcludes>
+  <useIdeaDefaultExcludes default-value=""true"">${rat.useIdeaDefaultExcludes}</useIdeaDefaultExcludes>
+  <useMavenDefaultExcludes default-value=""true"">${rat.useMavenDefaultExcludes}</useMavenDefaultExcludes>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-install-plugin:2.3.1:install (default-install)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <artifact default-value=""${project.artifact}""/>
+  <attachedArtifacts default-value=""${project.attachedArtifacts}""/>
+  <createChecksum default-value=""false"">${createChecksum}</createChecksum>
+  <localRepository>${localRepository}</localRepository>
+  <packaging default-value=""${project.packaging}""/>
+  <pomFile default-value=""${project.file}""/>
+  <updateReleaseInfo default-value=""false"">${updateReleaseInfo}</updateReleaseInfo>
+</configuration>
+[DEBUG] =======================================================================
+[DEBUG] com.mycompany.app:test:jar:1.0-SNAPSHOT
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ test ---
+[DEBUG] Created new class realm maven.api
+[DEBUG] Importing foreign packages into class realm maven.api
+[DEBUG]   Imported: org.apache.maven.wagon.events < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.transfer < plexus.core
+[DEBUG]   Imported: org.apache.maven.exception < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.metadata < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.Xpp3Dom < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.collection < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.version < plexus.core
+[DEBUG]   Imported: org.apache.maven.monitor < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.resource < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.logging < plexus.core
+[DEBUG]   Imported: org.apache.maven.profiles < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.classrealm < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.artifact < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.spi < plexus.core
+[DEBUG]   Imported: org.apache.maven.reporting < plexus.core
+[DEBUG]   Imported: org.apache.maven.usability < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.container < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.component < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlSerializer < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authentication < plexus.core
+[DEBUG]   Imported: org.apache.maven.lifecycle < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.classworlds < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.graph < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.settings < plexus.core
+[DEBUG]   Imported: org.codehaus.classworlds < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.impl < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.toolchain < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.deployment < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.observers < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParserException < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParser < plexus.core
+[DEBUG]   Imported: org.apache.maven.configuration < plexus.core
+[DEBUG]   Imported: org.apache.maven.cli < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.installation < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.context < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authorization < plexus.core
+[DEBUG]   Imported: org.apache.maven.project < plexus.core
+[DEBUG]   Imported: org.apache.maven.rtinfo < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.lifecycle < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.configuration < plexus.core
+[DEBUG]   Imported: org.apache.maven.artifact < plexus.core
+[DEBUG]   Imported: org.apache.maven.model < plexus.core
+[DEBUG]   Imported: org.apache.maven.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.proxy < plexus.core
+[DEBUG]   Imported: org.sonatype.aether.resolution < plexus.core
+[DEBUG]   Imported: org.apache.maven.plugin < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.* < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.personality < plexus.core
+[DEBUG] Populating class realm maven.api
+[DEBUG] org.apache.maven.plugins:maven-clean-plugin:jar:2.4.1:
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:2.0.6:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:2.0.5:compile
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-clean-plugin:2.4.1
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-clean-plugin:2.4.1
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-clean-plugin:2.4.1
+[DEBUG]   Included: org.apache.maven.plugins:maven-clean-plugin:jar:2.4.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:2.0.5
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-api:jar:2.0.6
+[DEBUG] Configuring mojo org.apache.maven.plugins:maven-clean-plugin:2.4.1:clean from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-clean-plugin:2.4.1, parent: sun.misc.Launcher$AppClassLoader@ba679e]
+[DEBUG] Configuring mojo 'org.apache.maven.plugins:maven-clean-plugin:2.4.1:clean' with basic configurator -->
+[DEBUG]   (f) directory = C:\Users\ddumont\Desktop\test\target
+[DEBUG]   (f) excludeDefaultDirectories = false
+[DEBUG]   (f) failOnError = true
+[DEBUG]   (f) followSymLinks = false
+[DEBUG]   (f) outputDirectory = C:\Users\ddumont\Desktop\test\target\classes
+[DEBUG]   (f) reportDirectory = C:\Users\ddumont\Desktop\test\target\site
+[DEBUG]   (f) skip = false
+[DEBUG]   (f) testOutputDirectory = C:\Users\ddumont\Desktop\test\target\test-classes
+[DEBUG] -- end configuration --
+[INFO] Deleting C:\Users\ddumont\Desktop\test\target
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\test-1.0-SNAPSHOT.jar
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\surefire\surefirebooter8266149225673203440.jar
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\surefire\surefire5545660843503742297tmp
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\surefire\surefire4446175046153537991tmp
+[INFO] Deleting directory C:\Users\ddumont\Desktop\test\target\surefire
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\rat.txt
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\maven-archiver\pom.properties
+[INFO] Deleting directory C:\Users\ddumont\Desktop\test\target\maven-archiver
+[INFO] Deleting directory C:\Users\ddumont\Desktop\test\target
+[DEBUG] Skipping non-existing directory C:\Users\ddumont\Desktop\test\target\classes
+[DEBUG] Skipping non-existing directory C:\Users\ddumont\Desktop\test\target\test-classes
+[DEBUG] Skipping non-existing directory C:\Users\ddumont\Desktop\test\target\site
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ test ---
+[DEBUG] org.apache.maven.plugins:maven-resources-plugin:jar:2.5:
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-project:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-profile:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-artifact-manager:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-plugin-registry:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-core:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-plugin-parameter-documenter:jar:2.0.6:compile
+[DEBUG]       org.apache.maven.reporting:maven-reporting-api:jar:2.0.6:compile
+[DEBUG]          org.apache.maven.doxia:doxia-sink-api:jar:1.0-alpha-7:compile
+[DEBUG]       org.apache.maven:maven-repository-metadata:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-error-diagnostics:jar:2.0.6:compile
+[DEBUG]       commons-cli:commons-cli:jar:1.0:compile
+[DEBUG]       org.apache.maven:maven-plugin-descriptor:jar:2.0.6:compile
+[DEBUG]       org.codehaus.plexus:plexus-interactivity-api:jar:1.0-alpha-4:compile
+[DEBUG]       classworlds:classworlds:jar:1.1:compile
+[DEBUG]    org.apache.maven:maven-artifact:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-settings:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-model:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-monitor:jar:2.0.6:compile
+[DEBUG]    org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1:compile
+[DEBUG]       junit:junit:jar:3.8.1:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:2.0.5:compile
+[DEBUG]    org.apache.maven.shared:maven-filtering:jar:1.0:compile
+[DEBUG]       org.sonatype.plexus:plexus-build-api:jar:0.0.4:compile
+[DEBUG]    org.codehaus.plexus:plexus-interpolation:jar:1.13:compile
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-resources-plugin:2.5
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-resources-plugin:2.5
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-resources-plugin:2.5
+[DEBUG]   Included: org.apache.maven.plugins:maven-resources-plugin:jar:2.5
+[DEBUG]   Included: org.apache.maven.reporting:maven-reporting-api:jar:2.0.6
+[DEBUG]   Included: org.apache.maven.doxia:doxia-sink-api:jar:1.0-alpha-7
+[DEBUG]   Included: commons-cli:commons-cli:jar:1.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-interactivity-api:jar:1.0-alpha-4
+[DEBUG]   Included: junit:junit:jar:3.8.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:2.0.5
+[DEBUG]   Included: org.apache.maven.shared:maven-filtering:jar:1.0
+[DEBUG]   Included: org.sonatype.plexus:plexus-build-api:jar:0.0.4
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.13
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-api:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-project:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-profile:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-artifact-manager:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-registry:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-core:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-parameter-documenter:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-repository-metadata:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-error-diagnostics:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-descriptor:jar:2.0.6
+[DEBUG]   Excluded: classworlds:classworlds:jar:1.1
+[DEBUG]   Excluded: o"
+RAT-190, Dan Dumont,16-02-15 20:48,"Philipp Ottlinger: I don't think this is OS specific.   Let me try it out on my ubuntu machine
+
+
+My ubuntu machine fails as well...   but our build machines are also ubuntu, and I notice this issue on them as well.  I still don't think it's platform related."
+RAT-190, Philipp Ottlinger,16-02-15 20:52,"Thanks for the last output - your dependency tree looks rather old, my mvn invokes a much newer maven-jar-plugin. Not sure if that has to do with the problems you experience. Since all builds on Jenkins are green I do not suspect a general problem:
+
+My invocation yields
+
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ test ---
+[DEBUG] Dependency collection stats: {ConflictMarker.analyzeTime=0, ConflictMarker.markTime=0, ConflictMarker.nodeCount=74, ConflictIdSorter.graphTime=0, ConflictIdSorter.topsortTime=0, ConflictIdSorter.conflictIdCount=28, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=2, ConflictResolver.conflictItemCount=70, DefaultDependencyCollector.collectTime=17, DefaultDependencyCollector.transformTime=2}
+[DEBUG] org.apache.maven.plugins:maven-jar-plugin:jar:2.4:
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-project:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-settings:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-profile:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-artifact-manager:jar:2.0.6:compile
+[DEBUG]          org.apache.maven:maven-repository-metadata:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-plugin-registry:jar:2.0.6:compile
+[DEBUG]       org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1:compile
+[DEBUG]          junit:junit:jar:3.8.1:compile
+[DEBUG]          classworlds:classworlds:jar:1.1-alpha-2:compile
+[DEBUG]    org.apache.maven:maven-model:jar:2.0.6:runtime
+[DEBUG]    org.apache.maven:maven-artifact:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-archiver:jar:2.5:compile
+[DEBUG]       org.apache.maven:maven-core:jar:2.0.6:compile
+[DEBUG]          org.apache.maven:maven-plugin-parameter-documenter:jar:2.0.6:compile
+[DEBUG]          org.apache.maven.reporting:maven-reporting-api:jar:2.0.6:compile
+[DEBUG]             org.apache.maven.doxia:doxia-sink-api:jar:1.0-alpha-7:compile
+[DEBUG]          org.apache.maven:maven-error-diagnostics:jar:2.0.6:compile
+[DEBUG]          commons-cli:commons-cli:jar:1.0:compile
+[DEBUG]          org.apache.maven:maven-plugin-descriptor:jar:2.0.6:compile
+[DEBUG]          org.codehaus.plexus:plexus-interactivity-api:jar:1.0-alpha-4:compile
+[DEBUG]          org.apache.maven:maven-monitor:jar:2.0.6:compile
+[DEBUG]       org.codehaus.plexus:plexus-interpolation:jar:1.15:compile
+[DEBUG]    org.codehaus.plexus:plexus-archiver:jar:2.1:compile
+[DEBUG]       org.codehaus.plexus:plexus-io:jar:2.0.2:compile
+[DEBUG]    commons-lang:commons-lang:jar:2.1:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:3.0:compile
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-jar-plugin:2.4
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-jar-plugin:2.4
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-jar-plugin:2.4
+[DEBUG]   Included: org.apache.maven.plugins:maven-jar-plugin:jar:2.4
+[DEBUG]   Included: junit:junit:jar:3.8.1
+[DEBUG]   Included: org.apache.maven:maven-archiver:jar:2.5
+[DEBUG]   Included: org.apache.maven.reporting:maven-reporting-api:jar:2.0.6
+[DEBUG]   Included: org.apache.maven.doxia:doxia-sink-api:jar:1.0-alpha-7
+[DEBUG]   Included: commons-cli:commons-cli:jar:1.0
+[DEBUG]   Included: org.codehaus.plexus:plexus-interactivity-api:jar:1.0-alpha-4
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.15
+[DEBUG]   Included: org.codehaus.plexus:plexus-archiver:jar:2.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-io:jar:2.0.2
+[DEBUG]   Included: commons-lang:commons-lang:jar:2.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.0
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-api:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-project:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-settings:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-profile:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-artifact-manager:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-repository-metadata:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-registry:jar:2.0.6
+[DEBUG]   Excluded: org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1
+[DEBUG]   Excluded: classworlds:classworlds:jar:1.1-alpha-2
+[DEBUG]   Excluded: org.apache.maven:maven-model:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-artifact:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-core:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-parameter-documenter:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-error-diagnostics:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-descriptor:jar:2.0.6
+[DEBUG]   Excluded: org.apache.maven:maven-monitor:jar:2.0.6
+[DEBUG] Configuring mojo org.apache.maven.plugins:maven-jar-plugin:2.4:jar from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-jar-plugin:2.4, parent: sun.misc.Launcher$AppClassLoader@5c647e05]
+[DEBUG] Configuring mojo 'org.apache.maven.plugins:maven-jar-plugin:2.4:jar' with basic configurator -->
+[DEBUG]   (f) classesDirectory = /tmp/a/test/target/classes
+[DEBUG]   (f) defaultManifestFile = /tmp/a/test/target/classes/META-INF/MANIFEST.MF
+[DEBUG]   (f) finalName = test-1.0-SNAPSHOT
+[DEBUG]   (f) forceCreation = false
+[DEBUG]   (f) outputDirectory = /tmp/a/test/target
+[DEBUG]   (f) project = MavenProject: com.mycompany.app:test:1.0-SNAPSHOT @ /tmp/a/test/pom.xml
+[DEBUG]   (f) session = org.apache.maven.execution.MavenSession@73ff4fae
+[DEBUG]   (f) skipIfEmpty = false
+[DEBUG]   (f) useDefaultManifestFile = false
+[DEBUG] -- end configuration --
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[DEBUG] isUp2date: false (Destination /tmp/a/test/target/test-1.0-SNAPSHOT.jar not found.)
+[INFO] Building jar: /tmp/a/test/target/test-1.0-SNAPSHOT.jar
+[DEBUG] adding directory META-INF/
+[DEBUG] adding entry META-INF/MANIFEST.MF
+[DEBUG] adding directory META-INF/maven/
+[DEBUG] adding directory META-INF/maven/com.mycompany.app/
+[DEBUG] adding directory META-INF/maven/com.mycompany.app/test/
+[DEBUG] adding entry META-INF/maven/com.mycompany.app/test/pom.xml
+[DEBUG] adding entry META-INF/maven/com.mycompany.app/test/pom.properties
+[INFO] 
+[INFO] --- apache-rat-plugin:0.11:check (default) @ test ---
+[DEBUG] Dependency collection stats: {ConflictMarker.analyzeTime=0, ConflictMarker.markTime=1, ConflictMarker.nodeCount=160, ConflictIdSorter.graphTime=0, ConflictIdSorter.topsortTime=0, ConflictIdSorter.conflictIdCount=51, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=3, ConflictResolver.conflictItemCount=119, DefaultDependencyCollector.collectTime=113, DefaultDependencyCollector.transformTime=4}
+[DEBUG] org.apache.rat:apache-rat-plugin:jar:0.11:
+[DEBUG]    org.apache.rat:apache-rat-core:jar:0.11:compile
+[DEBUG]       commons-collections:commons-collections:jar:3.2.1:compile
+[DEBUG]       commons-lang:commons-lang:jar:2.6:compile
+[DEBUG]       commons-io:commons-io:jar:2.2:compile
+[DEBUG]       org.apache.commons:commons-compress:jar:1.5:compile
+[DEBUG]       commons-cli:commons-cli:jar:1.2:compile
+[DEBUG]    org.apache.maven:maven-artifact:jar:2.2.1:compile
+[DEBUG]    org.apache.maven:maven-artifact-manager:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-repository-metadata:jar:2.2.1:compile
+[DEBUG]       org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1:compile
+[DEBUG]          classworlds:classworlds:jar:1.1-alpha-2:compile
+[DEBUG]       backport-util-concurrent:backport-util-concurrent:jar:3.1:compile
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:2.2.1:compile
+[DEBUG]    org.apache.maven:maven-project:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-settings:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-profile:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-model:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-plugin-registry:jar:2.2.1:compile
+[DEBUG]       org.codehaus.plexus:plexus-interpolation:jar:1.11:compile
+[DEBUG]    org.apache.maven.doxia:doxia-core:jar:1.2:compile
+[DEBUG]       org.apache.maven.doxia:doxia-logging-api:jar:1.2:compile
+[DEBUG]       xerces:xercesImpl:jar:2.9.1:compile
+[DEBUG]          xml-apis:xml-apis:jar:1.3.04:compile
+[DEBUG]       org.apache.httpcomponents:httpclient:jar:4.0.2:compile
+[DEBUG]          org.apache.httpcomponents:httpcore:jar:4.0.1:compile
+[DEBUG]          commons-logging:commons-logging:jar:1.1.1:compile
+[DEBUG]          commons-codec:commons-codec:jar:1.3:compile
+[DEBUG]    org.apache.maven.doxia:doxia-decoration-model:jar:1.2:compile
+[DEBUG]    org.apache.maven.doxia:doxia-sink-api:jar:1.2:compile
+[DEBUG]    org.apache.maven.doxia:doxia-site-renderer:jar:1.2:compile
+[DEBUG]       org.apache.maven.doxia:doxia-module-xhtml:jar:1.2:compile
+[DEBUG]       org.apache.maven.doxia:doxia-module-fml:jar:1.2:compile
+[DEBUG]       org.codehaus.plexus:plexus-i18n:jar:1.0-beta-7:compile
+[DEBUG]       org.codehaus.plexus:plexus-velocity:jar:1.1.7:compile
+[DEBUG]       org.apache.velocity:velocity:jar:1.5:compile
+[DEBUG]          oro:oro:jar:2.0.8:compile
+[DEBUG]    org.apache.maven.reporting:maven-reporting-api:jar:3.0:compile
+[DEBUG]    org.apache.maven.shared:maven-plugin-testing-harness:jar:1.1:compile
+[DEBUG]       org.apache.maven:maven-core:jar:2.0:compile
+[DEBUG]          org.apache.maven:maven-plugin-parameter-documenter:jar:2.0:compile
+[DEBUG]          org.apache.maven:maven-error-diagnostics:jar:2.0:compile
+[DEBUG]          org.apache.maven:maven-plugin-descriptor:jar:2.0:compile
+[DEBUG]          org.codehaus.plexus:plexus-interactivity-api:jar:1.0-alpha-4:compile
+[DEBUG]          org.apache.maven:maven-monitor:jar:2.0:compile
+[DEBUG]       junit:junit:jar:4.11:test
+[DEBUG]          org.hamcrest:hamcrest-core:jar:1.3:test
+[DEBUG]       org.codehaus.plexus:plexus-archiver:jar:1.0-alpha-7:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:3.0.8:compile
+[DEBUG] Created new class realm plugin>org.apache.rat:apache-rat-plugin:0.11
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.rat:apache-rat-plugin:0.11
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.rat:apache-rat-plugin:0.11
+[DEBUG]   Included: org.apache.rat:apache-rat-plugin:jar:0.11
+[DEBUG]   Included: org.apache.rat:apache-rat-core:jar:0.11
+[DEBUG]   Included: commons-collections:commons-collections:jar:3.2.1
+[DEBUG]   Included: commons-lang:commons-lang:jar:2.6
+[DEBUG]   Included: commons-io:commons-io:jar:2.2
+[DEBUG]   Included: org.apache.commons:commons-compress:jar:1.5
+[DEBUG]   Included: commons-cli:commons-cli:jar:1.2
+[DEBUG]   Included: backport-util-concurrent:backport-util-concurrent:jar:3.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.11
+[DEBUG]   Included: org.apache.maven.doxia:doxia-core:jar:1.2
+[DEBUG]   Included: org.apache.maven.doxia:doxia-logging-api:jar:1.2
+[DEBUG]   Included: xerces:xercesImpl:jar:2.9.1
+[DEBUG]   Included: xml-apis:xml-apis:jar:1.3.04
+[DEBUG]   Included: org.apache.httpcomponents:httpclient:jar:4.0.2
+[DEBUG]   Included: org.apache.httpcomponents:httpcore:jar:4.0.1
+[DEBUG]   Included: commons-logging:commons-logging:jar:1.1.1
+[DEBUG]   Included: commons-codec:commons-codec:jar:1.3
+[DEBUG]   Included: org.apache.maven.doxia:doxia-decoration-model:jar:1.2
+[DEBUG]   Included: org.apache.maven.doxia:doxia-sink-api:jar:1.2
+[DEBUG]   Included: org.apache.maven.doxia:doxia-site-renderer:jar:1.2
+[DEBUG]   Included: org.apache.maven.doxia:doxia-module-xhtml:jar:1.2
+[DEBUG]   Included: org.apache.maven.doxia:doxia-module-fml:jar:1.2
+[DEBUG]   Included: org.codehaus.plexus:plexus-i18n:jar:1.0-beta-7
+[DEBUG]   Included: org.codehaus.plexus:plexus-velocity:jar:1.1.7
+[DEBUG]   Included: org.apache.velocity:velocity:jar:1.5
+[DEBUG]   Included: oro:oro:jar:2.0.8
+[DEBUG]   Included: org.apache.maven.reporting:maven-reporting-api:jar:3.0
+[DEBUG]   Included: org.apache.maven.shared:maven-plugin-testing-harness:jar:1.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-interactivity-api:jar:1.0-alpha-4
+[DEBUG]   Included: org.codehaus.plexus:plexus-archiver:jar:1.0-alpha-7
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.0.8
+[DEBUG]   Excluded: org.apache.maven:maven-artifact:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-artifact-manager:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-repository-metadata:jar:2.2.1
+[DEBUG]   Excluded: org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1
+[DEBUG]   Excluded: classworlds:classworlds:jar:1.1-alpha-2
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-api:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-project:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-settings:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-profile:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-model:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-registry:jar:2.2.1
+[DEBUG]   Excluded: org.apache.maven:maven-core:jar:2.0
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-parameter-documenter:jar:2.0
+[DEBUG]   Excluded: org.apache.maven:maven-error-diagnostics:jar:2.0
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-descriptor:jar:2.0
+[DEBUG]   Excluded: org.apache.maven:maven-monitor:jar:2.0
+[DEBUG]   Excluded: junit:junit:jar:4.11
+[DEBUG]   Excluded: org.hamcrest:hamcrest-core:jar:1.3
+[DEBUG] Configuring mojo org.apache.rat:apache-rat-plugin:0.11:check from plugin realm ClassRealm[plugin>org.apache.rat:apache-rat-plugin:0.11, parent: sun.misc.Launcher$AppClassLoader@5c647e05]
+[DEBUG] Configuring mojo 'org.apache.rat:apache-rat-plugin:0.11:check' with basic configurator -->
+[DEBUG]   (f) addDefaultLicenseMatchers = true
+[DEBUG]   (f) addLicenseHeaders = false
+[DEBUG]   (f) basedir = /tmp/a/test
+[DEBUG]   (f) excludeSubProjects = true
+[DEBUG]   (f) excludes = [*.loadrule, **/.*, **/.*/*, **/*.json, **/*.html, **/*.md, **/*.log, **/*.mf, src/site/**, src/scripts/**, *.obsolete/**, **/test/**, sequoia-crx/**, shimmer-cookie-ninja/**]
+[DEBUG]   (f) ignoreErrors = false
+[DEBUG]   (s) familyName = IBM Copyright
+[DEBUG]   (f) licenseFamilies = [org.apache.rat.license.SimpleLicenseFamily@15cea7b0]
+[DEBUG]   (s) licenseFamilyCategory = IBMCL
+[DEBUG]   (s) licenseFamilyName = IBM Copyright
+[DEBUG]   (s) patterns = [Copyright IBM Corp. 2015, Copyright IBM Corp. 2014, 2015, Copyright IBM Corp. 2013, 2015]
+[DEBUG]   (f) licenses = [org.apache.rat.analysis.license.SimplePatternBasedLicense@48b22fd4]
+[DEBUG]   (f) numUnapprovedLicenses = 0
+[DEBUG]   (f) project = MavenProject: com.mycompany.app:test:1.0-SNAPSHOT @ /tmp/a/test/pom.xml
+[DEBUG]   (f) reportFile = /tmp/a/test/target/rat.txt
+[DEBUG]   (f) reportStyle = plain
+[DEBUG]   (f) skip = false
+[DEBUG]   (f) useDefaultExcludes = true
+[DEBUG]   (f) useEclipseDefaultExcludes = true
+[DEBUG]   (f) useIdeaDefaultExcludes = true
+[DEBUG]   (f) useMavenDefaultExcludes = true
+[DEBUG] -- end configuration --
+[DEBUG] Adding plexus default exclusions...
+[DEBUG] Adding exclusions often needed by Maven projects...
+[DEBUG] Adding exclusions often needed by projects developed in Eclipse...
+[DEBUG] Adding exclusions often needed by projects developed in IDEA...
+[DEBUG] Finished creating list of implicit excludes.
+[INFO] 51 implicit excludes (use -debug for more details).
+[DEBUG] Implicit exclude: **/*~
+[DEBUG] Implicit exclude: **/#*#
+[DEBUG] Implicit exclude: **/.#*
+[DEBUG] Implicit exclude: **/%*%
+[DEBUG] Implicit exclude: **/._*
+[DEBUG] Implicit exclude: **/CVS
+[DEBUG] Implicit exclude: **/CVS/**
+[DEBUG] Implicit exclude: **/.cvsignore
+[DEBUG] Implicit exclude: **/RCS
+[DEBUG] Implicit exclude: **/RCS/**
+[DEBUG] Implicit exclude: **/SCCS
+[DEBUG] Implicit exclude: **/SCCS/**
+[DEBUG] Implicit exclude: **/vssver.scc
+[DEBUG] Implicit exclude: **/project.pj
+[DEBUG] Implicit exclude: **/.svn
+[DEBUG] Implicit exclude: **/.svn/**
+[DEBUG] Implicit exclude: **/.arch-ids
+[DEBUG] Implicit exclude: **/.arch-ids/**
+[DEBUG] Implicit exclude: **/.bzr
+[DEBUG] Implicit exclude: **/.bzr/**
+[DEBUG] Implicit exclude: **/.MySCMServerInfo
+[DEBUG] Implicit exclude: **/.DS_Store
+[DEBUG] Implicit exclude: **/.metadata
+[DEBUG] Implicit exclude: **/.metadata/**
+[DEBUG] Implicit exclude: **/.hg
+[DEBUG] Implicit exclude: **/.hg/**
+[DEBUG] Implicit exclude: **/.git
+[DEBUG] Implicit exclude: **/.gitignore
+[DEBUG] Implicit exclude: **/.gitattributes
+[DEBUG] Implicit exclude: **/.git/**
+[DEBUG] Implicit exclude: **/BitKeeper
+[DEBUG] Implicit exclude: **/BitKeeper/**
+[DEBUG] Implicit exclude: **/ChangeSet
+[DEBUG] Implicit exclude: **/ChangeSet/**
+[DEBUG] Implicit exclude: **/_darcs
+[DEBUG] Implicit exclude: **/_darcs/**
+[DEBUG] Implicit exclude: **/.darcsrepo
+[DEBUG] Implicit exclude: **/.darcsrepo/**
+[DEBUG] Implicit exclude: **/-darcs-backup*
+[DEBUG] Implicit exclude: **/.darcs-temp-mail
+[DEBUG] Implicit exclude: target/**/*
+[DEBUG] Implicit exclude: cobertura.ser
+[DEBUG] Implicit exclude: release.properties
+[DEBUG] Implicit exclude: pom.xml.releaseBackup
+[DEBUG] Implicit exclude: .classpath
+[DEBUG] Implicit exclude: .project
+[DEBUG] Implicit exclude: .settings/**/*
+[DEBUG] Implicit exclude: *.iml
+[DEBUG] Implicit exclude: *.ipr
+[DEBUG] Implicit exclude: *.iws
+[DEBUG] Implicit exclude: .idea/**/*
+[INFO] Exclude: *.loadrule
+[INFO] Exclude: **/.*
+[INFO] Exclude: **/.*/*
+[INFO] Exclude: **/*.json
+[INFO] Exclude: **/*.html
+[INFO] Exclude: **/*.md
+[INFO] Exclude: **/*.log
+[INFO] Exclude: **/*.mf
+[INFO] Exclude: src/site/**
+[INFO] Exclude: src/scripts/**
+[INFO] Exclude: *.obsolete/**
+[INFO] Exclude: **/test/**
+[INFO] Exclude: sequoia-crx/**
+[INFO] Exclude: shimmer-cookie-ninja/**
+[DEBUG] Excluded 4 resources:
+[DEBUG]  - excluded target/test-1.0-SNAPSHOT.jar
+[DEBUG]  - excluded target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+[DEBUG]  - excluded target/maven-archiver/pom.properties
+[DEBUG]  - excluded target/rat.txt
+[INFO] 2 resources included (use -debug for more details)
+[DEBUG]  - included pom.xml
+[DEBUG]  - included src/main/java/com/mycompany/app/MailComposeView.js
+Warning:  org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+Compiler-Warnungen:
+  WARNING:  'org.apache.xerces.jaxp.SAXParserImpl: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.'
+Warning:  org.apache.xerces.parsers.SAXParser: Feature 'http://javax.xml.XMLConstants/feature/secure-processing' is not recognized.
+Warning:  org.apache.xerces.parsers.SAXParser: Property 'http://javax.xml.XMLConstants/property/accessExternalDTD' is not recognized.
+Warning:  org.apache.xerces.parsers.SAXParser: Property 'http://www.oracle.com/xml/jaxp/properties/entityExpansionLimit' is not recognized.
+[INFO] Rat check: Summary of files. Unapproved: 1 unknown: 1 generated: 0 approved: 1 licence.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1.678 s
+[INFO] Finished at: 2015-02-16T21:46:30+01:00
+[INFO] Final Memory: 13M/155M
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.rat:apache-rat-plugin:0.11:check (default) on project test: Too many files with unapproved license: 1 See RAT report in: /tmp/a/test/target/rat.txt -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.apache.rat:apache-rat-plugin:0.11:check (default) on project test: Too many files with unapproved license: 1 See RAT report in: /tmp/a/test/target/rat.txt
+        at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:212)
+        at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:153)
+        at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:145)
+        at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:116)
+        at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:80)
+        at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build(SingleThreadedBuilder.java:51)
+        at org.apache.maven.lifecycle.internal.LifecycleStarter.execute(LifecycleStarter.java:120)
+        at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:355)
+        at org.apache.maven.DefaultMaven.execute(DefaultMaven.java:155)
+        at org.apache.maven.cli.MavenCli.execute(MavenCli.java:584)
+        at org.apache.maven.cli.MavenCli.doMain(MavenCli.java:216)
+        at org.apache.maven.cli.MavenCli.main(MavenCli.java:160)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:483)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced(Launcher.java:289)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.launch(Launcher.java:229)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(Launcher.java:415)
+        at org.codehaus.plexus.classworlds.launcher.Launcher.main(Launcher.java:356)
+Caused by: org.apache.rat.mp.RatCheckException: Too many files with unapproved license: 1 See RAT report in: /tmp/a/test/target/rat.txt
+        at org.apache.rat.mp.RatCheckMojo.check(RatCheckMojo.java:194)
+        at org.apache.rat.mp.RatCheckMojo.execute(RatCheckMojo.java:182)
+        at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:132)
+        at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:208)
+        ... 19 more
+[ERROR] 
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException"
+RAT-190, Dan Dumont,16-02-15 20:55,"The maven version I was using was quite old...   perhaps that's why.
+Here's a debug build from a modern maven:
+
+
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T12:29:23-05:00)
+Maven home: c:\apache-maven-3.2.5\bin\..
+Java version: 1.7.0_21, vendor: Oracle Corporation
+Java home: C:\Program Files\Java\jdk1.7.0_21\jre
+Default locale: en_US, platform encoding: Cp1252
+OS name: ""windows 8"", version: ""6.2"", arch: ""amd64"", family: ""windows""
+[INFO] Error stacktraces are turned on.
+[DEBUG] Reading global settings from c:\apache-maven-3.2.5\bin\..\conf\settings.xml
+[DEBUG] Reading user settings from C:\Users\ddumont\.m2\settings.xml
+[DEBUG] Using local repository at C:\Users\ddumont\.m2\repository
+[DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10.0 for C:\Users\ddumont\.m2\repository
+[INFO] Scanning for projects...
+[DEBUG] Extension realms for project com.mycompany.app:test:jar:1.0-SNAPSHOT: (none)
+[DEBUG] Looking up lifecyle mappings for packaging jar from ClassRealm[plexus.core, parent: null]
+[DEBUG] === REACTOR BUILD PLAN ================================================
+[DEBUG] Project: com.mycompany.app:test:jar:1.0-SNAPSHOT
+[DEBUG] Tasks:   [clean, install]
+[DEBUG] Style:   Regular
+[DEBUG] =======================================================================
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building test 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] === PROJECT BUILD PLAN ================================================
+[DEBUG] Project:       com.mycompany.app:test:1.0-SNAPSHOT
+[DEBUG] Dependencies (collect): []
+[DEBUG] Dependencies (resolve): [compile, runtime, test]
+[DEBUG] Repositories (dependencies): [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] Repositories (plugins)     : [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-clean-plugin:2.5:clean (default-clean)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <directory default-value=""${project.build.directory}""/>
+  <excludeDefaultDirectories default-value=""false"">${clean.excludeDefaultDirectories}</excludeDefaultDirectories>
+  <failOnError default-value=""true"">${maven.clean.failOnError}</failOnError>
+  <followSymLinks default-value=""false"">${clean.followSymLinks}</followSymLinks>
+  <outputDirectory default-value=""${project.build.outputDirectory}""/>
+  <reportDirectory default-value=""${project.reporting.outputDirectory}""/>
+  <retryOnError default-value=""true"">${maven.clean.retryOnError}</retryOnError>
+  <skip default-value=""false"">${clean.skip}</skip>
+  <testOutputDirectory default-value=""${project.build.testOutputDirectory}""/>
+  <verbose>${clean.verbose}</verbose>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:2.6:resources (default-resources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <buildFilters default-value=""${project.build.filters}""/>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <escapeString>${maven.resources.escapeString}</escapeString>
+  <escapeWindowsPaths default-value=""true"">${maven.resources.escapeWindowsPaths}</escapeWindowsPaths>
+  <includeEmptyDirs default-value=""false"">${maven.resources.includeEmptyDirs}</includeEmptyDirs>
+  <outputDirectory default-value=""${project.build.outputDirectory}""/>
+  <overwrite default-value=""false"">${maven.resources.overwrite}</overwrite>
+  <project default-value=""${project}""/>
+  <resources default-value=""${project.resources}""/>
+  <session default-value=""${session}""/>
+  <supportMultiLineFiltering default-value=""false"">${maven.resources.supportMultiLineFiltering}</supportMultiLineFiltering>
+  <useBuildFilters default-value=""true""/>
+  <useDefaultDelimiters default-value=""true""/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:3.1:compile (default-compile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <basedir default-value=""${basedir}""/>
+  <buildDirectory default-value=""${project.build.directory}""/>
+  <classpathElements default-value=""${project.compileClasspathElements}""/>
+  <compileSourceRoots default-value=""${project.compileSourceRoots}""/>
+  <compilerId default-value=""javac"">${maven.compiler.compilerId}</compilerId>
+  <compilerReuseStrategy default-value=""${reuseCreated}"">${maven.compiler.compilerReuseStrategy}</compilerReuseStrategy>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <debug default-value=""true"">${maven.compiler.debug}</debug>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value=""true"">${maven.compiler.failOnError}</failOnError>
+  <forceJavacCompilerUse default-value=""false"">${maven.compiler.forceJavacCompilerUse}</forceJavacCompilerUse>
+  <fork default-value=""false"">${maven.compiler.fork}</fork>
+  <generatedSourcesDirectory default-value=""${project.build.directory}/generated-sources/annotations""/>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <mojoExecution>${mojoExecution}</mojoExecution>
+  <optimize default-value=""false"">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value=""${project.build.outputDirectory}""/>
+  <projectArtifact default-value=""${project.artifact}""/>
+  <showDeprecation default-value=""false"">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value=""false"">${maven.compiler.showWarnings}</showWarnings>
+  <skipMain>${maven.main.skip}</skipMain>
+  <skipMultiThreadWarning default-value=""false"">${maven.compiler.skipMultiThreadWarning}</skipMultiThreadWarning>
+  <source default-value=""1.5"">${maven.compiler.source}</source>
+  <staleMillis default-value=""0"">${lastModGranularityMs}</staleMillis>
+  <target default-value=""1.5"">${maven.compiler.target}</target>
+  <useIncrementalCompilation default-value=""true"">${maven.compiler.useIncrementalCompilation}</useIncrementalCompilation>
+  <verbose default-value=""false"">${maven.compiler.verbose}</verbose>
+  <mavenSession default-value=""${session}""/>
+  <session default-value=""${session}""/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:2.6:testResources (default-testResources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <buildFilters default-value=""${project.build.filters}""/>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <escapeString>${maven.resources.escapeString}</escapeString>
+  <escapeWindowsPaths default-value=""true"">${maven.resources.escapeWindowsPaths}</escapeWindowsPaths>
+  <includeEmptyDirs default-value=""false"">${maven.resources.includeEmptyDirs}</includeEmptyDirs>
+  <outputDirectory default-value=""${project.build.testOutputDirectory}""/>
+  <overwrite default-value=""false"">${maven.resources.overwrite}</overwrite>
+  <project default-value=""${project}""/>
+  <resources default-value=""${project.testResources}""/>
+  <session default-value=""${session}""/>
+  <skip>${maven.test.skip}</skip>
+  <supportMultiLineFiltering default-value=""false"">${maven.resources.supportMultiLineFiltering}</supportMultiLineFiltering>
+  <useBuildFilters default-value=""true""/>
+  <useDefaultDelimiters default-value=""true""/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:3.1:testCompile (default-testCompile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <basedir default-value=""${basedir}""/>
+  <buildDirectory default-value=""${project.build.directory}""/>
+  <classpathElements default-value=""${project.testClasspathElements}""/>
+  <compileSourceRoots default-value=""${project.testCompileSourceRoots}""/>
+  <compilerId default-value=""javac"">${maven.compiler.compilerId}</compilerId>
+  <compilerReuseStrategy default-value=""${reuseCreated}"">${maven.compiler.compilerReuseStrategy}</compilerReuseStrategy>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <debug default-value=""true"">${maven.compiler.debug}</debug>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <encoding default-value=""${project.build.sourceEncoding}"">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value=""true"">${maven.compiler.failOnError}</failOnError>
+  <forceJavacCompilerUse default-value=""false"">${maven.compiler.forceJavacCompilerUse}</forceJavacCompilerUse>
+  <fork default-value=""false"">${maven.compiler.fork}</fork>
+  <generatedTestSourcesDirectory default-value=""${project.build.directory}/generated-test-sources/test-annotations""/>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <mojoExecution>${mojoExecution}</mojoExecution>
+  <optimize default-value=""false"">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value=""${project.build.testOutputDirectory}""/>
+  <showDeprecation default-value=""false"">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value=""false"">${maven.compiler.showWarnings}</showWarnings>
+  <skip>${maven.test.skip}</skip>
+  <skipMultiThreadWarning default-value=""false"">${maven.compiler.skipMultiThreadWarning}</skipMultiThreadWarning>
+  <source default-value=""1.5"">${maven.compiler.source}</source>
+  <staleMillis default-value=""0"">${lastModGranularityMs}</staleMillis>
+  <target default-value=""1.5"">${maven.compiler.target}</target>
+  <testSource>${maven.compiler.testSource}</testSource>
+  <testTarget>${maven.compiler.testTarget}</testTarget>
+  <useIncrementalCompilation default-value=""true"">${maven.compiler.useIncrementalCompilation}</useIncrementalCompilation>
+  <verbose default-value=""false"">${maven.compiler.verbose}</verbose>
+  <mavenSession default-value=""${session}""/>
+  <session default-value=""${session}""/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <argLine>${argLine}</argLine>
+  <basedir default-value=""${basedir}""/>
+  <childDelegation default-value=""false"">${childDelegation}</childDelegation>
+  <classesDirectory default-value=""${project.build.outputDirectory}""/>
+  <debugForkedProcess>${maven.surefire.debug}</debugForkedProcess>
+  <disableXmlReport default-value=""false"">${disableXmlReport}</disableXmlReport>
+  <enableAssertions default-value=""true"">${enableAssertions}</enableAssertions>
+  <excludedGroups>${excludedGroups}</excludedGroups>
+  <failIfNoSpecifiedTests>${surefire.failIfNoSpecifiedTests}</failIfNoSpecifiedTests>
+  <failIfNoTests>${failIfNoTests}</failIfNoTests>
+  <forkMode default-value=""once"">${forkMode}</forkMode>
+  <forkedProcessTimeoutInSeconds>${surefire.timeout}</forkedProcessTimeoutInSeconds>
+  <groups>${groups}</groups>
+  <junitArtifactName default-value=""junit:junit"">${junitArtifactName}</junitArtifactName>
+  <jvm>${jvm}</jvm>
+  <localRepository default-value=""${localRepository}""/>
+  <objectFactory>${objectFactory}</objectFactory>
+  <parallel>${parallel}</parallel>
+  <parallelMavenExecution default-value=""${session.parallel}""/>
+  <perCoreThreadCount default-value=""true"">${perCoreThreadCount}</perCoreThreadCount>
+  <pluginArtifactMap>${plugin.artifactMap}</pluginArtifactMap>
+  <pluginDescriptor default-value=""${plugin}""/>
+  <printSummary default-value=""true"">${surefire.printSummary}</printSummary>
+  <projectArtifactMap>${project.artifactMap}</projectArtifactMap>
+  <redirectTestOutputToFile default-value=""false"">${maven.test.redirectTestOutputToFile}</redirectTestOutputToFile>
+  <remoteRepositories default-value=""${project.pluginArtifactRepositories}""/>
+  <reportFormat default-value=""brief"">${surefire.reportFormat}</reportFormat>
+  <reportNameSuffix default-value="""">${surefire.reportNameSuffix}</reportNameSuffix>
+  <reportsDirectory default-value=""${project.build.directory}/surefire-reports""/>
+  <runOrder default-value=""filesystem""/>
+  <skip default-value=""false"">${maven.test.skip}</skip>
+  <skipExec>${maven.test.skip.exec}</skipExec>
+  <skipTests default-value=""false"">${skipTests}</skipTests>
+  <test>${test}</test>
+  <testClassesDirectory default-value=""${project.build.testOutputDirectory}""/>
+  <testFailureIgnore default-value=""false"">${maven.test.failure.ignore}</testFailureIgnore>
+  <testNGArtifactName default-value=""org.testng:testng"">${testNGArtifactName}</testNGArtifactName>
+  <testSourceDirectory default-value=""${project.build.testSourceDirectory}""/>
+  <threadCount>${threadCount}</threadCount>
+  <trimStackTrace default-value=""true"">${trimStackTrace}</trimStackTrace>
+  <useFile default-value=""true"">${surefire.useFile}</useFile>
+  <useManifestOnlyJar default-value=""true"">${surefire.useManifestOnlyJar}</useManifestOnlyJar>
+  <useSystemClassLoader default-value=""true"">${surefire.useSystemClassLoader}</useSystemClassLoader>
+  <useUnlimitedThreads default-value=""false"">${useUnlimitedThreads}</useUnlimitedThreads>
+  <workingDirectory>${basedir}</workingDirectory>
+  <project default-value=""${project}""/>
+  <session default-value=""${session}""/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-jar-plugin:2.4:jar (default-jar)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <classesDirectory default-value=""${project.build.outputDirectory}""/>
+  <defaultManifestFile default-value=""${project.build.outputDirectory}/META-INF/MANIFEST.MF""/>
+  <finalName default-value=""${project.build.finalName}"">${jar.finalName}</finalName>
+  <forceCreation default-value=""false"">${jar.forceCreation}</forceCreation>
+  <outputDirectory default-value=""${project.build.directory}""/>
+  <project default-value=""${project}""/>
+  <session default-value=""${session}""/>
+  <skipIfEmpty default-value=""false"">${jar.skipIfEmpty}</skipIfEmpty>
+  <useDefaultManifestFile default-value=""false"">${jar.useDefaultManifestFile}</useDefaultManifestFile>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.rat:apache-rat-plugin:0.11:check (default)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <addDefaultLicenseMatchers default-value=""true"">${rat.addDefaultLicenseMatchers}</addDefaultLicenseMatchers>
+  <addLicenseHeaders default-value=""false"">${rat.addLicenseHeaders}</addLicenseHeaders>
+  <basedir default-value=""${basedir}"">${rat.basedir}</basedir>
+  <copyrightMessage>${rat.copyrightMessage}</copyrightMessage>
+  <excludeSubProjects default-value=""true"">true</excludeSubProjects>
+  <excludes combine.children=""append"">
+    <exclude>*.loadrule</exclude>
+    <exclude>**/.*</exclude>
+    <exclude>**/.*/*</exclude>
+    <exclude>**/*.json</exclude>
+    <exclude>**/*.html</exclude>
+    <exclude>**/*.md</exclude>
+    <exclude>**/*.log</exclude>
+    <exclude>**/*.mf</exclude>
+    <exclude>src/site/**</exclude>
+    <exclude>src/scripts/**</exclude>
+    <exclude>*.obsolete/**</exclude>
+    <exclude>**/test/**</exclude>
+    <exclude>sequoia-crx/**</exclude>
+    <exclude>shimmer-cookie-ninja/**</exclude>
+  </excludes>
+  <ignoreErrors default-value=""false"">${rat.ignoreErrors}</ignoreErrors>
+  <licenseFamilies>
+    <licenseFamily implementation=""org.apache.rat.license.SimpleLicenseFamily"">
+      <familyName>IBM Copyright</familyName>
+    </licenseFamily>
+  </licenseFamilies>
+  <licenses>
+    <license implementation=""org.apache.rat.analysis.license.SimplePatternBasedLicense"">
+      <licenseFamilyCategory>IBMCL</licenseFamilyCategory>
+      <licenseFamilyName>IBM Copyright</licenseFamilyName>
+      <notes></notes>
+      <patterns>
+        <pattern>Copyright IBM Corp. 2015</pattern>
+        <pattern>Copyright IBM Corp. 2014, 2015</pattern>
+        <pattern>Copyright IBM Corp. 2013, 2015</pattern>
+      </patterns>
+    </license>
+  </licenses>
+  <numUnapprovedLicenses default-value=""0"">${rat.numUnapprovedLicenses}</numUnapprovedLicenses>
+  <project default-value=""${project}""/>
+  <reportFile default-value=""${project.build.directory}/rat.txt"">${rat.outputFile}</reportFile>
+  <reportStyle default-value=""plain"">${rat.outputStyle}</reportStyle>
+  <skip default-value=""false"">${rat.skip}</skip>
+  <useDefaultExcludes default-value=""true"">${rat.useDefaultExcludes}</useDefaultExcludes>
+  <useEclipseDefaultExcludes default-value=""true"">${rat.useEclipseDefaultExcludes}</useEclipseDefaultExcludes>
+  <useIdeaDefaultExcludes default-value=""true"">${rat.useIdeaDefaultExcludes}</useIdeaDefaultExcludes>
+  <useMavenDefaultExcludes default-value=""true"">${rat.useMavenDefaultExcludes}</useMavenDefaultExcludes>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-install-plugin:2.4:install (default-install)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version=""1.0"" encoding=""UTF-8""?>
+<configuration>
+  <artifact default-value=""${project.artifact}""/>
+  <attachedArtifacts default-value=""${project.attachedArtifacts}""/>
+  <createChecksum default-value=""false"">${createChecksum}</createChecksum>
+  <localRepository>${localRepository}</localRepository>
+  <packaging default-value=""${project.packaging}""/>
+  <pomFile default-value=""${project.file}""/>
+  <skip default-value=""false"">${maven.install.skip}</skip>
+  <updateReleaseInfo default-value=""false"">${updateReleaseInfo}</updateReleaseInfo>
+</configuration>
+[DEBUG] =======================================================================
+[DEBUG] Dependency collection stats: {ConflictMarker.analyzeTime=0, ConflictMarker.markTime=0, ConflictMarker.nodeCount=1, ConflictIdSorter.graphTime=0, ConflictIdSorter.topsortTime=1, ConflictIdSorter.conflictIdCount=0, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=2, ConflictResolver.conflictItemCount=0, DefaultDependencyCollector.collectTime=0, DefaultDependencyCollector.transformTime=5}
+[DEBUG] com.mycompany.app:test:jar:1.0-SNAPSHOT
+[INFO] 
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ test ---
+[DEBUG] Created new class realm maven.api
+[DEBUG] Importing foreign packages into class realm maven.api
+[DEBUG]   Imported: org.apache.maven.wagon.events < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.impl < plexus.core
+[DEBUG]   Imported: org.apache.maven.exception < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.Xpp3Dom < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.version < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.metadata < plexus.core
+[DEBUG]   Imported: javax.enterprise.util.* < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.collection < plexus.core
+[DEBUG]   Imported: org.apache.maven.monitor < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.repository < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.resource < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.logging < plexus.core
+[DEBUG]   Imported: org.apache.maven.profiles < plexus.core
+[DEBUG]   Imported: org.apache.maven.classrealm < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution.scope < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.artifact < plexus.core
+[DEBUG]   Imported: org.apache.maven.execution < plexus.core
+[DEBUG]   Imported: org.apache.maven.reporting < plexus.core
+[DEBUG]   Imported: org.apache.maven.usability < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.container < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.component < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.transfer < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authentication < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlSerializer < plexus.core
+[DEBUG]   Imported: org.apache.maven.lifecycle < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.* < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.graph < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.classworlds < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.internal.impl < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.repository < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.resolution < plexus.core
+[DEBUG]   Imported: javax.inject.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.settings < plexus.core
+[DEBUG]   Imported: org.codehaus.classworlds < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.toolchain < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.spi < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.observers < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParserException < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParser < plexus.core
+[DEBUG]   Imported: org.apache.maven.configuration < plexus.core
+[DEBUG]   Imported: org.apache.maven.cli < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.context < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.authorization < plexus.core
+[DEBUG]   Imported: org.apache.maven.project < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.installation < plexus.core
+[DEBUG]   Imported: org.eclipse.aether.deployment < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.lifecycle < plexus.core
+[DEBUG]   Imported: org.apache.maven.rtinfo < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.configuration < plexus.core
+[DEBUG]   Imported: org.apache.maven.artifact < plexus.core
+[DEBUG]   Imported: org.apache.maven.model < plexus.core
+[DEBUG]   Imported: org.slf4j.* < plexus.core
+[DEBUG]   Imported: javax.enterprise.inject.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.wagon.proxy < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.* < plexus.core
+[DEBUG]   Imported: org.apache.maven.plugin < plexus.core
+[DEBUG]   Imported: org.codehaus.plexus.personality < plexus.core
+[DEBUG] Populating class realm maven.api
+[DEBUG] Dependency collection stats: {ConflictMarker.analyzeTime=1, ConflictMarker.markTime=0, ConflictMarker.nodeCount=3, ConflictIdSorter.graphTime=0, ConflictIdSorter.topsortTime=1, ConflictIdSorter.conflictIdCount=3, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=1, ConflictResolver.conflictItemCount=3, DefaultDependencyCollector.collectTime=42, DefaultDependencyCollector.transformTime=3}
+[DEBUG] org.apache.maven.plugins:maven-clean-plugin:jar:2.5:
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:2.0.6:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:3.0:compile
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-clean-plugin:2.5
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-clean-plugin:2.5
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-clean-plugin:2.5
+[DEBUG]   Included: org.apache.maven.plugins:maven-clean-plugin:jar:2.5
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.0
+[DEBUG]   Excluded: org.apache.maven:maven-plugin-api:jar:2.0.6
+[DEBUG] Configuring mojo org.apache.maven.plugins:maven-clean-plugin:2.5:clean from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-clean-plugin:2.5, parent: sun.misc.Launcher$AppClassLoader@ba679e]
+[DEBUG] Configuring mojo 'org.apache.maven.plugins:maven-clean-plugin:2.5:clean' with basic configurator -->
+[DEBUG]   (f) directory = C:\Users\ddumont\Desktop\test\target
+[DEBUG]   (f) excludeDefaultDirectories = false
+[DEBUG]   (f) failOnError = true
+[DEBUG]   (f) followSymLinks = false
+[DEBUG]   (f) outputDirectory = C:\Users\ddumont\Desktop\test\target\classes
+[DEBUG]   (f) reportDirectory = C:\Users\ddumont\Desktop\test\target\site
+[DEBUG]   (f) retryOnError = true
+[DEBUG]   (f) skip = false
+[DEBUG]   (f) testOutputDirectory = C:\Users\ddumont\Desktop\test\target\test-classes
+[DEBUG] -- end configuration --
+[INFO] Deleting C:\Users\ddumont\Desktop\test\target
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\test-1.0-SNAPSHOT.jar
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\surefire\surefirebooter7580978260818739160.jar
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\surefire\surefire6894583736731250035tmp
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\surefire\surefire3506919889142064331tmp
+[INFO] Deleting directory C:\Users\ddumont\Desktop\test\target\surefire
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\rat.txt
+[INFO] Deleting file C:\Users\ddumont\Desktop\test\target\maven-archiver\pom.properties
+[INFO] Deleting directory C:\Users\ddumont\Desktop\test\target\maven-archiver
+[INFO] Deleting directory C:\Users\ddumont\Desktop\test\target
+[DEBUG] Skipping non-existing directory C:\Users\ddumont\Desktop\test\target\classes
+[DEBUG] Skipping non-existing directory C:\Users\ddumont\Desktop\test\target\test-classes
+[DEBUG] Skipping non-existing directory C:\Users\ddumont\Desktop\test\target\site
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ test ---
+[DEBUG] Dependency collection stats: {ConflictMarker.analyzeTime=1, ConflictMarker.markTime=0, ConflictMarker.nodeCount=77, ConflictIdSorter.graphTime=0, ConflictIdSorter.topsortTime=0, ConflictIdSorter.conflictIdCount=26, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=4, ConflictResolver.conflictItemCount=74, DefaultDependencyCollector.collectTime=195, DefaultDependencyCollector.transformTime=5}
+[DEBUG] org.apache.maven.plugins:maven-resources-plugin:jar:2.6:
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:2.0.6:compile
+[DEBUG]    org.apache.maven:maven-project:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-profile:jar:2.0.6:compile
+[DEBUG]       org.apache.maven:maven-artifact-manager:jar:2.0.6:compile
+[DEBUG] "
+RAT-190, Dan Dumont,16-02-15 21:00,I also tried deleting my ~/.m2/repository and running a build with a modern maven.  Same result.
+RAT-190, Philipp Ottlinger,16-02-15 21:07,Dan Dumont Can you set your encoding to UTF-8 to see if that changes? How's the system's locale for both of your systems. Can you invoke your maven with --U to force updating all dependencies?
+RAT-190, Dan Dumont,16-02-15 21:14,"I added 
+
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
+
+ 
+
+to my pom and still get a success.   Did you mean for me to do it another way?"
+RAT-190, Philipp Ottlinger,16-02-15 21:24,"I'm not sure if that changes anything, but checked the file itself - the JS seems to be UTF-8. I'm not sure if your operating system handles it correctly during RAT-parsing. Here's the output of file:
+
+$ file MailComposeView.js 
+MailComposeView.js: UTF-8 Unicode text, with CRLF line terminators
+
+
+
+I meant to change the mvn encoding settings; I assume that the pom's encoding has nothing to do with the maven encoding if mvn itself is running. Can you manage to get UTF-8 when calling this:
+
+$ mvn --version
+
+Apache Maven 3.2.5 (12a6b3acb947671f09b81f49094c53f426d8cea1; 2014-12-14T18:29:23+01:00)
+Maven home: /home/user/software/maven
+Java version: 1.8.0_31, vendor: Oracle Corporation
+Java home: /home/user/jdk1.8.0_31/jre
+Default locale: de_DE, platform encoding: UTF-8
+OS name: ""linux"", version: ""3.13.0-46-generic"", arch: ""amd64"", family: ""unix""
+
+
+You had this CP-something encoding as platform encoding.
+
+Please also try out if 
+
+mvn --U -Dfile.encoding=UTF-8
+
+
+changes anything."
+RAT-190, Dan Dumont,16-02-15 21:31,"AHH!!!
+
+-Dfile.encoding=UTF-8 finally caused it to fail!
+
+Hmmm...   how is it that RAT approves the files in the case where it's not the same?   I would prefer it to be picky about different encodings instead of passing them."
+RAT-190, Philipp Ottlinger,16-02-15 21:34,"Ok - now we've got the culprit 
+
+Since RAT is agnostic of file encodings or environment settings it relies on the underlying operating system/JDK settings and the encoding of the file itself - I find this behaviour consistent with other command-line tools ..... what would you prefer - some output like:
+
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+or
+[WARNING] File encoding has not been set, using platform encoding cp1292, i.e. build is platform dependent!
+
+
+
+Would that be helpful?"
+RAT-190, Dan Dumont,16-02-15 21:40,"But there's no valid license in the file, and when RAT scans it, it's passed if the encodings are different.
+Even a warning here doesn't make sense to me...   the plugin is supposed to audit my release, if it can't scan a file it should fail on it because it can't do the audit."
+RAT-190, Dan Dumont,11-12-15 19:44,Is it possible for it to use the file encoding specified in the maven-resources-plugin?
+RAT-190, Dan Dumont,11-12-15 19:48,"Also, I still think it's a good idea to fail the verification if the idea is to make sure all files have a copyright header and rat can't read the file."
+RAT-211, Konstantin Kolinko,16-02-16 12:04,"rat-output.xml file containing broken header-sample
+
+Opening the file in Firefox reports that error is at line 3, symbol 40626:
+
+Look for
+<resource
+name='/home/buildslave32/slave32/tomcat-trunk/build/output/dist/src/webapps/docs/tribes/leader-election-initiate-election.dia'><header-sample>
+
+This file contains fragment only from `*.dia` files, as the rat-excludes configuration has already been updated to exclude `**/*.bmp` ones."
+RAT-211, Jochen Wiedmann,16-02-16 12:30,"Quoting the relevant part:
+
+  <resource name='/home/buildslave32/slave32/tomcat-trunk/build/output/dist/src/webapps/docs/tribes/leader-election-initiate-election.dia'>
+    <header-sample>
+      Binary Trash"
+RAT-212, Christopher Tubbs,23-02-16 19:35,"Example failure:
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+
+
+Example success:
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>"
+RAT-212, Philipp Ottlinger,23-02-16 21:54,"Thanks for your report - since RAT scans for license snippets you may use the following workaround:
+
+	keep https in your pom url-structure
+	add a valid license header to your pom.xml such as:
+
+<?xml version=""1.0"" encoding=""utf-8""?>
+<project xmlns=""http://maven.apache.org/POM/4.0.0"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xsi:schemaLocation=""http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"">
+<!--
+Copyright 2016, WhatSoEver Ltd.
+
+Licensed under the Apache License, Version 2.0 (the ""License"");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an ""AS IS"" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+  <modelVersion>4.0.0</modelVersion>
+
+
+
+
+
+This solves the issue.
+
+I was not aware that we perform a scan of the pom's structure. I always thought we parse for a license snippet instead ...."
+RAT-212, Christopher Tubbs,23-02-16 22:22,Perhaps the parsing of the license snippet is also sensitive to http vs. https? I haven't tried. I only happened to notice this issue on an external (non-ASF) POM which uses the apache-rat-plugin.
+RAT-212, Philipp Ottlinger,17-07-16 8:11,Christopher Tubbs if you get an okay from the legal team that a https-variant of the header is still licence-compliant we could easily add a workaround for your issue.
+RAT-212, Christopher Tubbs,17-07-16 12:29,"No problem, LEGAL-265 is the blocking issue."
+RAT-214, Philipp Ottlinger,14-03-16 20:50,"applied updates via
+URL: http://svn.apache.org/viewvc?rev=1734995&view=rev
+
+	ANT: 1.7.1 -> 1.9.6
+	COMPRESS: 1.5 -> 1.10"
+RAT-214, Philipp Ottlinger,15-03-16 6:23,CI builds were fine.
+RAT-215, Philipp Ottlinger,19-03-16 22:52,"Thanks for your bug report - I've added the font extensions to the list of ""binary by default"" files. This should speed up the scanning because the files are not digested.
+
+Feel free to retest with 0.12-SNAPSHOT and close the bug.
+
+
+New Revision: 1735829
+URL: http://svn.apache.org/viewvc?rev=1735829&view=rev"
+RAT-215, Robert Munteanu,22-03-16 10:12,"I was unable to verify the problem only appears on builds.apache.org, and the SNAPSHOT version does not appear to be deployed on repository.apache.org . 
+
+I tried a few -Dfile.encoding values but that did not help. Can you either suggest what file encodings to try to reproduce the problem with the 0.11.0 version or deploy a snapshot with the fix to repository.apache.org ? Thanks"
+RAT-222, Philipp Ottlinger,21-11-16 20:48,"Thanks for reporting this issue - I've fixed the webpage and adapted the templates to contain a special section referencing to the latest RAT release and the current SNAPSHOT.
+http://svn.apache.org/viewvc?rev=1770753&view=rev"
+RAT-224, Philipp Ottlinger,20-11-16 22:55,"Added the given PR 
+https://github.com/apache/creadur-rat/pull/5/files
+http://svn.apache.org/viewvc?rev=1770594&view=rev
+
+Thanks for spotting the mistake!
+
+Please verify and close this issue"
+RAT-225, Karl Heinz Marbaise,18-12-16 14:36,"First I can say there is no relationship to Windows. It will fail also on Mac and Linux (not tested).
+
+The problem is simply if you call the goal directly via: mvn apache-rat:check without the life cycle the execution with the id default-cli will be used to configure the appropriate plugin. In this case the plugin is configured in the reporting area which means only for running mvn site but not for running out of the life cycle. 
+
+This problem can be simply solved by moving the configuration in a pluginManagement area which will result in a working execution.
+I have attached a patch to this issue which solves the configuration issue in commons..."
+RAT-225, Pascal Schumacher,18-12-16 14:50,"Thank you very much! 
+
+Sorry for wasting your time with an invalid bug report."
+RAT-225, Karl Heinz Marbaise,18-12-16 14:52,No problem. I can try to move the issue to the commons-lang project ?
+RAT-225, Pascal Schumacher,18-12-16 14:53,Sure.
+RAT-228, Karl Heinz Marbaise,17-03-17 20:15,"The culprit lines are the following report-normal-operation.xml:
+
+  <target name=""allTests"">
+    <au:antunit xmlns:au=""antlib:org.apache.ant.antunit""
+                failonerror=""false"" errorproperty=""antunit.failed"">
+      <file file=""${ant.file}""/>
+      <au:plainlistener/>
+      <propertyset>
+        <propertyref name=""test.classpath""/>
+        <propertyref name=""jar.name""/>
+      </propertyset>
+    </au:antunit>
+  </target>
+
+
+In particular the following:
+failonerror=""false"" errorproperty=""antunit.failed"" which make ant to ignore the test failures..."
+RAT-228, Karl Heinz Marbaise,18-03-17 12:05,"So after more diving into this I have identified one of the following Ant Test:
+
+  <target name=""testFullTextMatcherNotApprovedSentToFile""
+          depends=""fileReportTest"">
+    <rat:report reportFile=""${report.file}""
+                addDefaultLicenseMatchers=""false"">
+      <file file=""${ant.file}""/>
+      <rat:fullTextMatcher
+          licenseFamilyCategory=""YASL1""
+          licenseFamilyName=""Yet Another Software License (YASL) 1.0""
+          notes=""Interesting License"">
+        License Family Name: Yet Another Software License (YASL) 1.0
+      </rat:fullTextMatcher>
+    </rat:report>
+    <assertReportContains text=""!YASL1 ${file.name}""/>
+    <assertReportDoesntContain text="" YASL1 ${file.name}""/>
+  </target>
+
+
+which expects to have the text !YASL1 in the resulting report...which seemed to be not the case:
+
+[au:antunit] Tests run: 1, Failures: 0, Errors: 1, Time elapsed: 0.124 sec
+[au:antunit] Target: testFullTextMatcherNotApprovedSentToFile  caused an ERROR
+[au:antunit] 	at line 208, column 55
+[au:antunit] 	Message: The following error occurred while executing this line:
+[au:antunit]  ../apache-rat/apache-rat-tasks/src/test/resources/antunit/report-normal-operation.xml:283: expected report to contain
+  '!YASL1 ../apache-rat/apache-rat-tasks/src/test/resources/antunit/report-normal-operation.xml' but was '
+[au:antunit] *****************************************************
+[au:antunit] Summary
+[au:antunit] -------
+[au:antunit] Generated at: 2017-03-18T11:55:24+01:00
+[au:antunit] 
+[au:antunit] Notes: 0
+[au:antunit] Binaries: 0
+[au:antunit] Archives: 0
+[au:antunit] Standards: 1
+[au:antunit] 
+[au:antunit] Apache Licensed: 0
+[au:antunit] Generated Documents: 0
+[au:antunit] 
+[au:antunit] JavaDocs are generated, thus a license header is optional.
+[au:antunit] Generated files do not require license headers.
+[au:antunit] 
+[au:antunit] 1 Unknown Licenses
+[au:antunit] 
+[au:antunit] *****************************************************
+[au:antunit] 
+[au:antunit] Files with unapproved licenses:
+[au:antunit] 
+[au:antunit]   ../apache-rat/apache-rat-tasks/src/test/resources/antunit/report-normal-operation.xml
+[au:antunit] 
+[au:antunit] *****************************************************
+[au:antunit] 
+[au:antunit] *****************************************************
+[au:antunit]   Files with Apache License headers will be marked AL
+[au:antunit]   Binary files (which do not require any license headers) will be marked B
+[au:antunit]   Compressed archives will be marked A
+[au:antunit]   Notices, licenses etc. will be marked N
+[au:antunit]  !????? ../apache-rat/apache-rat-tasks/src/test/resources/antunit/report-normal-operation.xml
+
+
+Which makes me think this test must be changed to expect !????? contained in the report..."
+RAT-228, Philipp Ottlinger,18-03-17 15:13,"Karl Heinz Marbaise I do not really know the inner workings of the ANT Plugin but assume that an additional license is added (YASL) and this license is supposed to be recognized by the ANT run .... this functionality was augmented in the last release on the Maven site, but most probably not completely on the ANT side? Just a wild guess."
+RAT-228, Stefan Bodewig,26-04-17 11:31,"While I was passing by I saw this report - and I happen to be the one who wrote the code 
+
+The Ant task allows detecting additional licenses and this test verifies you can actually do so using the invented ""Yet Another Software License "". If the test fails, then the task no longer seems to recognize the license and it indicates a real bug."
+RAT-228, Stefan Bodewig,26-04-17 11:36,"the failonerror=""false"" errorproperty=""antunit.failed"" are probably a copy-paste error of mine and can be removed in both files that contain them."
+RAT-228, Philipp Ottlinger,26-04-17 21:10,"Stefan Bodewig I tried your idea:
+
+--- src/test/resources/antunit/report-normal-operation.xml	(Revision 1792807)
++++ src/test/resources/antunit/report-normal-operation.xml	(Arbeitskopie)
+@@ -55,8 +55,7 @@
+   </target>
+ 
+   <target name=""allTests"">
+-    <au:antunit xmlns:au=""antlib:org.apache.ant.antunit""
+-                failonerror=""false"" errorproperty=""antunit.failed"">
++    <au:antunit xmlns:au=""antlib:org.apache.ant.antunit"">
+
+
+which yields to a test failure:
+
+snip
+[au:antunit]   <taskdef uri=""antlib:org.apache.ant.antunit"" 
+[au:antunit]            resource=""org/apache/ant/antunit/antlib.xml"" 
+[au:antunit]            classpathref=""all-classes-needed-for-tests""
+[au:antunit]            loaderref=""testloader""/>
+[au:antunit] 
+[au:antunit]   <taskdef uri=""antlib:org.apache.rat.anttasks""
+[au:antunit]            resource=""org/apache/rat/anttasks/antlib.xml""
+[au:antunit]            classpathref=""all-classes-needed-for-tests""
+[au:antunit]            loaderref=""testloader""/>
+[au:antunit] 
+[au:antunit]   <target name=""setUp"">
+[au:antunit]     <pathconvert dirsep=""/"" property=""file.name"">
+[au:antunit]       <path>
+[au:antunit]         <pathelement location=""/home/user/rat-trunk/apache-rat-tasks/src/test/resources/antunit/report-normal-operation.xml""/>
+[au:antunit]       </path>
+[au:antunit] '
+[au:antunit] 	took 0,078 sec
+[au:antunit] Target: testWithALUnknownSentToFile took 0,082 sec
+[au:antunit] Target: testWithReportSentToFile took 0,078 sec
+[au:antunit] Target: testCustomMatcherSentToFile  caused an ERROR
+[au:antunit] 	at line 332, column 43
+[au:antunit] 	Message: Unable to find a javac compiler;
+[au:antunit] com.sun.tools.javac.Main is not on the classpath.
+[au:antunit] Perhaps JAVA_HOME does not point to the JDK.
+[au:antunit] It is currently set to ""/home/user/jdk1.8.0_121/jre""
+[au:antunit] 	took 0,018 sec
+
+
+
+I'm not really into ANT but how do I configure a JDK for ANT? Due to the fact that Maven is running properly and my bash has a JAVA_HOME set I'm not really sure what to change where ....
+
+Thanks for any hints/ideas"
+RAT-228, Stefan Bodewig,28-04-17 4:25,"Well, I'm not really an expert for running Ant via Maven. Without Maven around it, Ant uses the JAVA_HOME environment variable. I get the same error locally while running ant -f run-antunit.xml passes (after I change the file to look for AntUnit 1.3 rather than 1.1.
+
+JAVA_HOME would be used by the Ant wrapper script to put tools.jar on the CLASSPATH, it seems the ant-run plugin isn't doing the same (add tools.jar, that is). I can get the test to run when adding fork=""true"" to the <javac> task, that way you get independent of the CLASSPATH and only use JAVA_HOME."
+RAT-229, Maxim Solodovnik,09-03-17 2:05,"Jenkins workspace will be clean-up on next build, so attach it here"
+RAT-229, Karl Heinz Marbaise,09-03-17 17:58,Fixed in r1786209
+RAT-230, Maxim Solodovnik,17-03-17 6:33,"same time this is accepted:
+
+
+# Licensed under Apache License 2.0. http://www.apache.org/licenses/LICENSE-2.0"
+RAT-230, Karl Heinz Marbaise,17-03-17 13:10,Fixed in r1787361
+RAT-230, Karl Heinz Marbaise,17-03-17 13:11,Do you have a chance to build the current state of apache-rat yourself and make a test with it?
+RAT-230, Maxim Solodovnik,17-03-17 13:12,Will try
+RAT-230, Maxim Solodovnik,17-03-17 13:23,"Works as expected!
+Thanks for the quick fix!"
+RAT-240, Philipp Ottlinger,04-09-17 19:41,"Szymon Janc not sure what you mean or what kind of exclusions you want to configure - 
+is https://github.com/ottlinger/creadur-rat-examples/tree/master/RAT-240 what you try to achieve?
+
+If you want to exclude a full folder, you may configure it like that
+
+  <exclude>foo/</exclude>
+  <exclude>foo/**</exclude>
+
+
+
+Do you have a link to the project that shows the behaviour you reported?
+
+Thanks"

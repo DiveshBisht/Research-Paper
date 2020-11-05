@@ -1,0 +1,79 @@
+ISSUE_ID,PRIORITY,STATUS,RESOLUTION,CREATION_DATE,CONTEXT
+MTOMCAT-103,Critical,Closed,Fixed,27/Oct/11 14:50,Executable War fails to run with a NullPointerException
+MTOMCAT-104,Minor,Closed,Fixed,27/Oct/11 19:58,Running java -jar from a parent directory causes a Zip file error
+MTOMCAT-105,Critical,Closed,Incomplete,03/Nov/11 06:36,creating executable war failed
+MTOMCAT-106,Major,Closed,Fixed,16/Nov/11 16:41,tomcat7-maven-plugin extraDependency not working with class not found
+MTOMCAT-108,Major,Closed,Fixed,12/Dec/11 21:11,THe httpsPort flag starts another http thread not an https thread
+MTOMCAT-118,Major,Closed,Fixed,02/Feb/12 09:45,tomcat7:run wont accept additionalClasspathDir arguments
+MTOMCAT-119,Major,Closed,Fixed,16/Feb/12 18:13,tomcat7:run-war fails because it expects META-INF\context.xml
+MTOMCAT-123,Major,Closed,Fixed,05/Mar/12 17:15,Can't add test scoped dependency filters to web.xml
+MTOMCAT-125,Major,Open,Unresolved,09/Mar/12 10:48,"mvn tomcat7:run got ""javax.naming.NameNotFoundException: Name jdbc is not bound in this Context"""
+MTOMCAT-128,Trivial,Closed,Fixed,16/Mar/12 15:09,The plugin ignores and/or parses web.xml incorrectally when using tomcatWebXml option
+MTOMCAT-129,Major,Closed,Duplicate,16/Mar/12 18:59,Regression of MTOMCAT-54 in tomcat7-maven-plugin
+MTOMCAT-133,Major,Closed,Fixed,04/Apr/12 11:08,"Servlet mapping to ""/"" does not work"
+MTOMCAT-134,Minor,Closed,Fixed,04/Apr/12 19:21,Empty additionalClasspathDir causes NPE in RunMojo.java
+MTOMCAT-135,Major,Closed,Fixed,05/Apr/12 08:13,tomcat7:run does not load HandlesTypes in application classes
+MTOMCAT-136,Major,Closed,Fixed,05/Apr/12 13:52,Tomcat7-maven-plugin 2.0-beta1 and useSeparateTomcatClassloader fails with run goal
+MTOMCAT-138,Major,Closed,Fixed,11/Apr/12 08:11,Cannot define the  embedded Tomcat version
+MTOMCAT-139,Major,Closed,Fixed,11/Apr/12 10:49,All static resources gives error 404
+MTOMCAT-141,Major,Closed,Fixed,13/Apr/12 11:46,"Context root ""/"" not working for Tomcat 7 Run"
+MTOMCAT-142,Major,Closed,Fixed,13/Apr/12 14:35,"contextFile path=""..."" ignored when using tomcat7:run"
+MTOMCAT-143,Major,Closed,Fixed,16/Apr/12 12:33,contextFile and tomcatUsers defined in pom.xml are not used with target tomcat7:run
+MTOMCAT-144,Major,Closed,Fixed,17/Apr/12 15:07,resourcePaths returns null
+MTOMCAT-158,Major,Open,Unresolved,01/Jun/12 20:25,WAR Overlay Does Not Include Resources
+MTOMCAT-166,Major,Closed,Duplicate,30/Jun/12 15:26,Cannot invoke Tomcat manager:Cannot retry request with a non-repeatable request entity
+MTOMCAT-168,Major,Closed,Incomplete,19/Jul/12 09:25,Nullpointer exception in run mojo
+MTOMCAT-169,Minor,Closed,Fixed,20/Jul/12 16:35,"Unable to Deploy WAR Defined via ""webapps"" Declaration"
+MTOMCAT-170,Minor,Closed,Fixed,20/Jul/12 16:43,"Unable to Specify Additional Classpath for WAR Defined via ""webapps"" Declaration"
+MTOMCAT-173,Major,Closed,Fixed,14/Aug/12 08:18,Direct dependencies are not added to classpath
+MTOMCAT-177,Major,Closed,Fixed,24/Sep/12 16:03,tomcat7:deploy ignores proxy settings
+MTOMCAT-178,Major,Open,Unresolved,01/Oct/12 21:07,additionalClasspathDirs doesn't seem to be used
+MTOMCAT-183,Major,Closed,Invalid,25/Oct/12 03:43,java.lang.NoSuchMethodError: javax.xml.stream.XMLInputFactory.newFactory()  error for 2.1-SNAPSHOT and 2.0-RELEASE
+MTOMCAT-184,Minor,Closed,Invalid,25/Oct/12 23:48,Entire web.xml is logged at level INFO
+MTOMCAT-185,Major,Closed,Fixed,14/Nov/12 13:21,change phase for tomcat6/7:run to process-classes
+MTOMCAT-186,Minor,Closed,Fixed,24/Nov/12 21:51,Closing executable JAR does not call ServletContextListener.contextDestroyed()
+MTOMCAT-193,Minor,Closed,Duplicate,08/Dec/12 19:52,Odd need to create an empty context.xml file for the Apache Tomcat Maven plugin to work
+MTOMCAT-197,Major,Closed,Fixed,09/Jan/13 14:55,tomcat7:undeploy goal not ignoring non-war projects
+MTOMCAT-198,Major,Closed,Fixed,09/Jan/13 17:33,Fix base classes for redeploy and redeploy-only goals
+MTOMCAT-202,Major,Open,Unresolved,21/Jan/13 13:51,Cannot enable SSO for multiple contexts in embedded tomcat
+MTOMCAT-205,Major,Open,Unresolved,01/Feb/13 12:37,Two executions of the tomcat7 plugin in the same build makes the JNDI context of the second execution fail
+MTOMCAT-210,Major,Closed,Incomplete,28/Feb/13 10:09,Tomcat7 plugin fails in multi module project when test dependencies are present
+MTOMCAT-211,Major,Closed,Fixed,28/Feb/13 20:28,The .war file is not extracted from executable war
+MTOMCAT-214,Minor,Closed,Fixed,07/Mar/13 21:03,Default attachArtifactClassifierType for AbstractStandaloneWarMojo should be war
+MTOMCAT-215,Minor,Closed,Fixed,11/Mar/13 19:52,"Multiple manifests under META-INF, two Main-Class entries"
+MTOMCAT-216,Major,Open,Unresolved,14/Mar/13 10:58,tomca7:run fails in multi-module project with overlays
+MTOMCAT-219,Major,Closed,Not A Problem,17/Apr/13 12:01,Web applications listed in <webapps> are not accessible
+MTOMCAT-220,Major,Closed,Incomplete,18/Apr/13 13:56,Tomcat does not stop listening to given port
+MTOMCAT-221,Major,Open,Unresolved,16/May/13 17:21,Deploy fails if server requires client-auth
+MTOMCAT-225,Major,Closed,Fixed,09/Jun/13 21:25,Documented deployment url returns 403 error
+MTOMCAT-227,Major,Closed,Fixed,12/Jun/13 14:40,Can't use slf4j-jcl with tomcat7:run
+MTOMCAT-232,Major,Closed,Incomplete,01/Aug/13 22:42,"Mapping webapps to ""/"" does not work"
+MTOMCAT-233,Major,Closed,Fixed,19/Aug/13 05:11,404 links at http://tomcat.apache.org/maven-plugin-2.0/modules.html
+MTOMCAT-237,Major,Open,Unresolved,03/Sep/13 18:36,Maven variables not evaluated/resolved inside systemProperties
+MTOMCAT-238,Major,Closed,Fixed,06/Sep/13 14:49,Parameter staticContextDocbase cant be used
+MTOMCAT-249,Minor,Open,Unresolved,25/Nov/13 17:17,Tomcat7:run fails to bring in JDBC class using JNDI Tomcat6:run works
+MTOMCAT-255,Minor,Open,Unresolved,15/Jan/14 16:55,"Getting ""Target Unreachable, identifier 'pessoaBean' resolved to null"" on tomcat:run but not in tomcat:run-war"
+MTOMCAT-257,Major,Open,Unresolved,20/Jan/14 17:29,Classpathes separation between plugin and application is broken (can't use slf4j-jcl in app)
+MTOMCAT-258,Blocker,Resolved,Invalid,07/Feb/14 20:34,There is a high memory utilization issue on tomcat7 version
+MTOMCAT-259,Major,Open,Unresolved,14/Feb/14 06:17,"ServletContext.getResourcePaths(""/WEB-INF/classes/"") returns null in tomcat7:run goal"
+MTOMCAT-262,Minor,Closed,Cannot Reproduce,12/Mar/14 15:55,tomcatConfigurationFilesDirectory not honoured
+MTOMCAT-264,Major,Open,Unresolved,14/Mar/14 18:11,uriEncoding parameter not working with HTTPS and run goal
+MTOMCAT-266,Minor,Open,Unresolved,08/Apr/14 21:02,The <fork> attribute crashes Tomcat on startup
+MTOMCAT-269,Major,Open,Unresolved,19/May/14 13:54,Context file of additional web apps is ignored
+MTOMCAT-270,Major,Open,Unresolved,19/May/14 15:41,Additional web apps are not re-deployed properly
+MTOMCAT-276,Minor,Open,Unresolved,21/Aug/14 15:33,Could not properly stop Tomcat when integration tests are failing
+MTOMCAT-279,Major,Closed,Invalid,19/Sep/14 15:11,Snapshot repositiory missing files for 2.3-SNAPSHOT
+MTOMCAT-281,Minor,Open,Unresolved,24/Sep/14 12:03,It is impossible to override 9 system properties that are packed within totomcat-embed-core-7.0.47.jar!/org/apache/catalina/startup/catalina.properties
+MTOMCAT-283,Major,Open,Unresolved,30/Sep/14 09:02,Tomcat7Runner does not use tomcat-users.xml when used without a server.xml
+MTOMCAT-286,Major,Closed,Fixed,30/Oct/14 13:13,Integration test fails on Windows
+MTOMCAT-287,Major,Closed,Duplicate,31/Oct/14 08:00,Selenium integration test fails in Jenkins on Windows
+MTOMCAT-289,Major,Closed,Not A Problem,04/Dec/14 20:21,Overriding the tomcat plugin dependencies to 7.0.53 does not get picked up by dependency:resolve-plugins
+MTOMCAT-295,Major,Open,Unresolved,24/Apr/15 10:04,Tomcat7 plugin fails in multi module project when test dependencies are present
+MTOMCAT-297,Major,Open,Unresolved,04/May/15 10:33,Using together with less compiler plugin
+MTOMCAT-298,Major,Open,Unresolved,12/May/15 12:38,Classloader linkage problem
+MTOMCAT-300,Minor,Open,Unresolved,21/Aug/15 16:47,exclude configuration in exec-war-only goal does not actually exclude anything
+MTOMCAT-305,Major,Open,Unresolved,28/Feb/16 20:55,shutdown not correct working if embedded tomcat is started twice in same maven build
+MTOMCAT-307,Major,Open,Unresolved,22/Jun/16 13:26,tomcat7:run: root context path not working in v2.2 but works for v2.0
+MTOMCAT-308,Major,Open,Unresolved,23/Nov/16 14:47,SNI header not sent
+MTOMCAT-309,Major,Open,Unresolved,15/Feb/17 18:57,Allow specifying sslProtocols via pom configuration
+MTOMCAT-310,Major,Open,Unresolved,18/Apr/17 09:28,mvn tomcat6:deploy on a pom with a war assemply ==> no war to deploy

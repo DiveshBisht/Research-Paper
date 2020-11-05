@@ -1,0 +1,136 @@
+ISSUE_ID,PRIORITY,STATUS,RESOLUTION,CREATION_DATE,CONTEXT
+LUCENE-7616,Major,Open,Unresolved,03/Jan/17 02:02,"QueryNode#toQueryString says it produces a string in the syntax understood by ""the query parser"", but cannot possibly know how"
+LUCENE-7629,Major,Open,Unresolved,11/Jan/17 23:11,ClassCastException in BytesStore.ramBytesUsed
+LUCENE-7630,Minor,Closed,Fixed,13/Jan/17 12:35,EdgeNGramTokenFilter drops payloads
+LUCENE-7631,Major,Open,Unresolved,14/Jan/17 01:27,Enforce javac warnings
+LUCENE-7635,Major,Open,Unresolved,16/Jan/17 08:47,Kuromoji fails if user dictionary contains #
+LUCENE-7642,Major,Open,Unresolved,18/Jan/17 13:55,TestGeo3DPoint.testGeo3DRelations() failure: invalid hits for shape=GeoCompositeMembershipShape
+LUCENE-7646,Minor,Closed,Fixed,20/Jan/17 12:45,AutomatonTermsEnum constructor throws a NullPointerException with match-all RegExp
+LUCENE-7647,Major,Closed,Fixed,20/Jan/17 14:54,CompressingStoredFieldsFormat should reclaim memory more aggressively
+LUCENE-7650,Minor,Open,Unresolved,21/Jan/17 11:48,Complexphrase queryparser stumbles on phrase query with trailing escaped colon
+LUCENE-7651,Critical,Closed,Fixed,22/Jan/17 09:11,Javadocs build fails with Java 8 update 121
+LUCENE-7652,Critical,Closed,Duplicate,23/Jan/17 03:19,LRUQueryCache / IndexSearcher.DEFAULT_QUERY_CACHE memory leak
+LUCENE-7657,Major,Closed,Fixed,24/Jan/17 09:49,Queries that reference a TermContext can cause a memory leak when they are cached
+LUCENE-7662,Major,Closed,Fixed,27/Jan/17 17:57,Index with missing files should throw CorruptIndexException
+LUCENE-7668,Major,Closed,Fixed,30/Jan/17 11:53,WordDelimiterGraphFilter fails to preserve token type
+LUCENE-7670,Major,Closed,Fixed,31/Jan/17 05:57,AnalyzingInfixSuggester should not immediately open an IndexWriter over an already-built index
+LUCENE-7672,Major,Open,Unresolved,31/Jan/17 17:59,CachingNaiveBayesClassifier doesn't compute log prior.
+LUCENE-7674,Major,Open,Unresolved,02/Feb/17 21:23,"java.lang.IllegalStateException: Child query must not match same docs with parent filter. Combine them as must clauses (+) to find a problem doc. docId=2147483647, class org.apache.lucene.search.ConjunctionScorer"
+LUCENE-7676,Minor,Resolved,Fixed,06/Feb/17 14:31,FilterCodecReader to override more super-class methods
+LUCENE-7679,Major,Closed,Fixed,07/Feb/17 10:30,MemoryIndex.addField() ignores some FieldType settings
+LUCENE-7682,Major,Open,Unresolved,07/Feb/17 18:41,UnifiedHighlighter not highlighting all terms relevant in SpanNearQuery
+LUCENE-7683,Minor,Open,Unresolved,08/Feb/17 18:22,FilterScorer to override more super-class methods
+LUCENE-7685,Minor,Closed,Fixed,10/Feb/17 11:03,Remove equals/rewrite hacks from block join queries
+LUCENE-7687,Major,Open,Unresolved,10/Feb/17 12:09,ComplexPhraseQueryParser with AsciiFoldingFilterFactory (SOLR)
+LUCENE-7690,Major,Closed,Fixed,11/Feb/17 15:22,TestSimpleTextPointsFormat.testWithExceptions() failure
+LUCENE-7695,Major,Closed,Fixed,15/Feb/17 12:38,Unknown query type SynonymQuery in ComplexPhraseQueryParser
+LUCENE-7698,Blocker,Resolved,Fixed,17/Feb/17 08:47,CommonGramsQueryFilter in the query analyzer chain breaks phrase queries
+LUCENE-7704,Minor,Closed,Fixed,22/Feb/17 18:23,SysnonymGraphFilter doesn't respect ignoreCase parameter
+LUCENE-7708,Major,Closed,Fixed,24/Feb/17 11:43,Track PositionLengthAttribute abuse
+LUCENE-7711,Major,Open,Unresolved,24/Feb/17 19:45,"TestRandomChains.testRandomChains() failure: got startOffset=10,endOffset=9"
+LUCENE-7715,Minor,Closed,Fixed,27/Feb/17 19:41,Simplify NearSpansUnordered
+LUCENE-7717,Major,Closed,Fixed,28/Feb/17 11:15,UnifiedHighlighter doesn't highlight PrefixQuery with multi-byte chars
+LUCENE-7718,Minor,Resolved,Fixed,28/Feb/17 15:51,buildAndPushRelease.py script should refer to working tree instead of directory
+LUCENE-7719,Minor,Resolved,Fixed,01/Mar/17 07:00,UnifiedHighlighter doesn't handle some AutomatonQuery's with multi-byte chars
+LUCENE-7724,Major,Open,Unresolved,01/Mar/17 17:09,TestIndexWriterExceptions.testNoLostDeletesOrUpdates() failure
+LUCENE-7726,Major,Closed,Fixed,01/Mar/17 22:20,Fix Javadocs HTML entity bugs
+LUCENE-7728,Major,Open,Unresolved,02/Mar/17 03:30,TestGrouping.testRandom() failures
+LUCENE-7731,Trivial,Resolved,Fixed,03/Mar/17 12:40,spelling mistake in search/package-summary.html#scoring javadocs
+LUCENE-7735,Minor,Open,Unresolved,09/Mar/17 22:20,Suffix compression for points
+LUCENE-7749,Minor,Closed,Fixed,21/Mar/17 09:41,IndexOrDocValuesQuery not working with LRUQueryCache (?)
+LUCENE-7755,Major,Closed,Fixed,28/Mar/17 12:58,Join queries should not reference IndexReaders.
+LUCENE-7757,Major,Open,Unresolved,16/Mar/17 21:34,Unified highlighter does not highlight wildcard phrases correctly when ComplexPhraseQueryParser is used
+LUCENE-7758,Major,Open,Unresolved,29/Mar/17 23:10,EdgeNGramTokenFilter breaks highlighting by keeping end offsets of original tokens
+LUCENE-7759,Major,Open,Unresolved,30/Mar/17 08:57,"TestBackwardsCompatibility only test sorted indexes created by 6.2.1, 6.2.1 and 6.3.0"
+LUCENE-7760,Major,Closed,Fixed,30/Mar/17 09:58,StandardAnalyzer/Tokenizer.setMaxTokenLength's javadocs are lying
+LUCENE-7761,Trivial,Closed,Fixed,30/Mar/17 13:47,Typo in comment in ReqExclScorer
+LUCENE-7766,Major,Open,Unresolved,03/Apr/17 17:55,WordDelimiter(Graph)Filter does not handle split offsets after HTMLStripCharFilter correctly
+LUCENE-7767,Major,Resolved,Fixed,05/Apr/17 12:23,SortedDocValues.ordValue() should throw in IOException
+LUCENE-7769,Major,Closed,Fixed,07/Apr/17 08:27,UnifiedHighlighter doesn't highlight MTQs wrapped in BoostQuery
+LUCENE-7775,Trivial,Closed,Fixed,10/Apr/17 20:35,Throwable not processed
+LUCENE-7777,Major,Closed,Fixed,11/Apr/17 13:35,ByteBlockPool.readBytes incorrectly throws AIOOBE if length > 32768
+LUCENE-7779,Major,Closed,Fixed,11/Apr/17 19:43,OfflineSorter should not call ByteSequencesReader.next again after it returns null
+LUCENE-7780,Minor,Resolved,Fixed,12/Apr/17 07:09,Remove TermValComparator.isNull
+LUCENE-7783,Minor,Resolved,Fixed,13/Apr/17 07:40,MemoryIndex throws an exception when getting points on a missing field
+LUCENE-7791,Major,Closed,Fixed,20/Apr/17 10:39,AIOOBE on flush+sort
+LUCENE-7793,Major,Closed,Fixed,20/Apr/17 19:17,smokeTestRelease.py should run documentation-lint
+LUCENE-7794,Major,Closed,Fixed,20/Apr/17 19:21,buildAndPushRelease.py should run precommit (or the equivalent)
+LUCENE-7795,Major,Open,Unresolved,20/Apr/17 21:15,WordDelimiterFilter produces invalid offsets in single word case
+LUCENE-7797,Minor,Closed,Fixed,21/Apr/17 08:17,FSDirectory.listAll will always return empty array
+LUCENE-7799,Major,Open,Unresolved,21/Apr/17 23:27,Classic query parser should allow autoGeneratePhraseQueries=true when splitOnWhitespace=false
+LUCENE-7803,Minor,Closed,Not A Problem,25/Apr/17 13:10,Problem using FunctionScoreQuery and Highlighting
+LUCENE-7805,Major,Open,Unresolved,25/Apr/17 15:12,TestRandomChains.testRandomChainsWithLargeStrings() failures
+LUCENE-7807,Major,Closed,Fixed,26/Apr/17 14:21,Test*RangeFieldQueries.testRandomBig() and .testRandomTiny() failures
+LUCENE-7808,Major,Closed,Fixed,26/Apr/17 23:58,PayloadScoreQuery and SpanPayloadCheckQuery have incomplete .equals and .hashCode methods
+LUCENE-7809,Major,Closed,Not A Problem,28/Apr/17 17:22,spatial-extras module is not present under IntelliJ 2017.1
+LUCENE-7810,Major,Closed,Fixed,29/Apr/17 02:07,false positive equality: distinctly diff join queries return equals()==true
+LUCENE-7814,Major,Closed,Fixed,03/May/17 04:34,"DateRangePrefixTree trouble finding years >= 292,000,000"
+LUCENE-7817,Major,Closed,Fixed,05/May/17 11:27,LRUQueryCache.onQueryCache is always called with null as first parameter
+LUCENE-7818,Major,Closed,Duplicate,06/May/17 16:05,Suspicious condition
+LUCENE-7819,Minor,Open,Unresolved,08/May/17 15:35,404 not found wiki.apache.org/jakarta-lucene links not forwarded to lucene-java
+LUCENE-7820,Trivial,Open,Unresolved,08/May/17 22:29,"overview-summary.html: no suitable method for isearcher.search(query, null, 1000)"
+LUCENE-7821,Major,Closed,Fixed,11/May/17 00:06,"Classic, flexible, and Solr's standard/""lucene"" query parsers: range queries should require "" TO "", and accept TO as range endpoints"
+LUCENE-7822,Minor,Open,Unresolved,11/May/17 08:26,IllegalArgumentException thrown instead of a CorruptIndexException
+LUCENE-7824,Major,Closed,Resolved,11/May/17 18:40,Multi-word synonyms rule with common terms at the same position are buggy
+LUCENE-7825,Major,Open,Unresolved,12/May/17 08:06,tests relying on empty stderr
+LUCENE-7830,Major,Open,Unresolved,16/May/17 01:18,"""ant clean-jars"" doesn't remove symlinks that point to non existent files"
+LUCENE-7831,Minor,Closed,Fixed,16/May/17 09:33,CodecUtil should not seek to negative offsets
+LUCENE-7832,Trivial,Open,Unresolved,17/May/17 13:14,atFirstInCurrentDoc is already initialized in base class
+LUCENE-7833,Major,Closed,Fixed,17/May/17 17:00,Calculating minimum score instead of maximum score in ToParentBlockJoinQuery.BlockJoinScorer.setScoreAndFreq
+LUCENE-7836,Blocker,Closed,Invalid,18/May/17 10:21,Multiple Token Regex Search Not working
+LUCENE-7838,Major,Resolved,Fixed,18/May/17 12:24,Add a knn classifier based on fuzzified term queries
+LUCENE-7842,Minor,Resolved,Invalid,22/May/17 10:35,"WordDelimiterGraphFilter adds an extra position for ""foo - bar"""
+LUCENE-7843,Major,Open,Unresolved,22/May/17 18:01,DirectoryReader.listCommits graceful handling of corrupt commits is broken
+LUCENE-7847,Major,Closed,Fixed,23/May/17 10:16,"RangeFieldQuery optimization for ""all docs match"" is broken"
+LUCENE-7848,Major,Open,Unresolved,23/May/17 14:00,QueryBuilder.analyzeGraphPhrase does not handle gaps correctly
+LUCENE-7849,Major,Resolved,Fixed,24/May/17 13:39,Geo3d: GeoWideLongitudeSlice constructor can fail under some conditions
+LUCENE-7851,Major,Resolved,Not A Problem,24/May/17 22:03,Lucene54DocValuesProducer#getSortedSetTable lookupTerm does not honor setDocument
+LUCENE-7859,Major,Resolved,Fixed,01/Jun/17 05:07,PackedQuadCell.getTokenBytesNoLeaf bug when null BytesRef
+LUCENE-7861,Major,Open,Unresolved,01/Jun/17 10:40,Hidden assumption that return value of IndexSearcher.slices is an array of continous sequential slices of the index
+LUCENE-7864,Trivial,Resolved,Fixed,06/Jun/17 10:15,IndexMergeTool is not using intermediate hard links (even if possible)
+LUCENE-7865,Major,Resolved,Not A Problem,06/Jun/17 21:01,TestICUTokenizer.testRandomHugeStrings failure
+LUCENE-7869,Major,Resolved,Fixed,07/Jun/17 17:52,MemoryIndex should sort 1d points
+LUCENE-7870,Major,Resolved,Invalid,08/Jun/17 11:38,"Use cl.loadClass(...) instead of Class.forName(..., cl) in SPIClassIterator"
+LUCENE-7871,Major,Resolved,Fixed,08/Jun/17 12:59,false positive match BlockJoinSelector[SortedDV] when child value is absent
+LUCENE-7872,Minor,Resolved,Fixed,09/Jun/17 06:28,TopDocs.totalHits should be a long
+LUCENE-7878,Major,Resolved,Fixed,14/Jun/17 10:52,QueryParser AND default operator and MultiWords synonyms failed if keywords exactly matches a synonym
+LUCENE-7879,Minor,Reopened,Unresolved,14/Jun/17 23:02,Cannot run Junit Test.
+LUCENE-7884,Minor,Closed,Not A Bug,20/Jun/17 20:38,StringHelper needs to catch NoClassDefFoundError
+LUCENE-7885,Major,Resolved,Invalid,21/Jun/17 12:30,Inconsistent return of documents in TermsEnum.postings after unsuccesful TermsEnum.seekExact(bytes)
+LUCENE-7887,Major,Resolved,Fixed,28/Jun/17 14:00,TestIndexWriterWithThreads.testIOExceptionDuringWriteSegmentWithThreadsOnlyOnce() failure: numTerms2=0 vs -8
+LUCENE-7888,Major,Resolved,Fixed,28/Jun/17 14:19,"Test{Mixed,Binary}DocValuesUpdates.testManyReopensAndFields() failures"
+LUCENE-7890,Major,Resolved,Fixed,28/Jun/17 17:43,MemoryIndex should allow doc values iterator to be reset to the current docid
+LUCENE-7892,Major,Resolved,Fixed,30/Jun/17 03:48,LatLonDocValuesField methods should be clearly marked as slow
+LUCENE-7894,Blocker,Resolved,Fixed,30/Jun/17 21:40,IndexWriter suffers temporary short-term amnesia
+LUCENE-7896,Minor,Open,Unresolved,04/Jul/17 13:20,Upgrade to RandomizedRunner 2.5.2
+LUCENE-7903,Minor,Open,Unresolved,21/Mar/17 08:21,Highlighting boolean queries shouldn't always highlight some clauses
+LUCENE-7909,Major,Resolved,Not A Problem,18/Jul/17 11:27,Issue with holes in polygons
+LUCENE-7911,Major,Open,Unresolved,22/Jul/17 02:42,checkJavadocLinks.py doesn't allow links to new Ref Guide in javadocs
+LUCENE-7914,Major,Resolved,Fixed,01/Aug/17 10:51,Add safeguards to RegExp.toAutomaton and Operations
+LUCENE-7916,Major,Resolved,Fixed,01/Aug/17 17:38,CompositeBreakIterator is brittle under ICU4J upgrade.
+LUCENE-7919,Major,Resolved,Fixed,05/Aug/17 09:18,excessive use of notifyAll
+LUCENE-7920,Minor,Closed,Won't Fix,07/Aug/17 09:19,Make it easier to create ip prefix queries
+LUCENE-7925,Minor,Resolved,Fixed,10/Aug/17 09:11,Deduplicate SHOULD and MUST clauses in BooleanQuery
+LUCENE-7926,Trivial,Open,Unresolved,10/Aug/17 15:30,Unsafe type cast in flexible parser QueryNodeImpl
+LUCENE-7931,Major,Closed,Not A Problem,18/Aug/17 02:09,SpanNotQuery  has bug？
+LUCENE-7932,Major,Resolved,Not A Problem,18/Aug/17 09:09,Search record with field value='a' or 'A' returns all records along with one more field value
+LUCENE-7933,Trivial,Resolved,Fixed,20/Aug/17 03:28,LongBistSet can't have Long size
+LUCENE-7938,Minor,Resolved,Not A Problem,21/Aug/17 15:00,Bounds of bounding box are not equal to bounding box
+LUCENE-7941,Minor,Resolved,Fixed,25/Aug/17 12:41,GeoDegeneratePoints return intersects when located in edge shape
+LUCENE-7942,Major,Resolved,Fixed,28/Aug/17 04:57,"For Geo3d paths, aggregating distance values using ""+"" is not adequate for squared distances"
+LUCENE-7943,Major,Resolved,Fixed,28/Aug/17 16:30,Plane.findArcDistancePoints() sometimes throws assertion failures even when plane explicitly normalized
+LUCENE-7944,Major,Open,Unresolved,28/Aug/17 21:51,GPG Password checker throws error only when process has not been terminated
+LUCENE-7945,Minor,Open,Unresolved,30/Aug/17 11:30,TestMergeSchedulerExternal failure
+LUCENE-7946,Major,Resolved,Fixed,31/Aug/17 05:13,CharTermAttributeImpl.setLength missing bounds check
+LUCENE-7950,Major,Resolved,Fixed,02/Sep/17 12:43,SimpleNaiveBayesDocumentClassifier throws NPE if no docs have the class field
+LUCENE-7952,Major,Open,Unresolved,04/Sep/17 11:42,TopDocs.ScoreMergeSortQueue.lessThan true/false mixup
+LUCENE-7956,Minor,Resolved,Fixed,05/Sep/17 09:47,ICUNormalizer2CharFilter may fail with a StackOverFlow error
+LUCENE-7957,Major,Resolved,Fixed,05/Sep/17 10:23,ConjunctionScorer.getChildren does not return all children
+LUCENE-7961,Major,Open,Unresolved,06/Sep/17 22:17,SimpleFSLockFactory should catch+box IOException (not FileAlreadyExistsException | AccessDeniedException)
+LUCENE-7963,Blocker,Resolved,Fixed,08/Sep/17 11:11,Useless getAttribute() in DefaultIndexingChain causes performance drop
+LUCENE-7965,Major,Resolved,Fixed,08/Sep/17 19:46,Geo3d test failure
+LUCENE-7967,Minor,Resolved,Fixed,12/Sep/17 10:09,GeoDegeneratePoint in Pole
+LUCENE-7968,Major,Resolved,Fixed,13/Sep/17 00:26,AnalyzingSuggester's comparator compares incorrectly
+LUCENE-7971,Trivial,Open,Unresolved,16/Sep/17 12:03,Invalid example in SpellChecker javadoc
+LUCENE-7977,Minor,Closed,Cannot Reproduce,Tuesday 12:07,LUCENE-7951 broke the maven build
+LUCENE-7978,Minor,Resolved,Fixed,Tuesday 14:58,Ant package fails on 7.0 and master

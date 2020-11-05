@@ -1,0 +1,93 @@
+ISSUE_ID,PRIORITY,STATUS,RESOLUTION,CREATION_DATE,CONTEXT
+RAT-3,Minor,Closed,Fixed,03-02-08 20:57,Incorrect alignment of file contents
+RAT-7,Major,Open,Unresolved,10-04-08 13:23,RAT should distinguish the different AL header versions
+RAT-11,Minor,Closed,Duplicate,03-05-08 23:58,Incorrect number of unnapproved licences reported
+RAT-12,Minor,Closed,Fixed,04-05-08 0:00,Incorrect SCM info in maven plugin pom
+RAT-29,Major,Closed,Invalid,23-06-08 11:19,"NPE on ""mvn install"" in rat-anttasks"
+RAT-33,Minor,Closed,Fixed,01-09-08 10:50,Mailing list subscribe points to unsubscribe
+RAT-34,Major,Resolved,Fixed,03-09-08 10:52,No license header added for java files that do not contain project line
+RAT-35,Trivial,Closed,Fixed,15-01-09 16:12,Incorrect number of unapproved licenses reported by rat:check
+RAT-36,Trivial,Closed,Fixed,15-01-09 16:27,"Report header incorrectly refers to an ""L"" license marker"
+RAT-39,Major,Resolved,Fixed,28-02-09 4:19,fix some line-ending issues etc. in the RAT svn
+RAT-41,Major,Resolved,Fixed,01-03-09 2:15,some license headers and xml declarations missing after maven-release-plugin
+RAT-43,Major,Resolved,Cannot Reproduce,03-03-09 16:54,Output to Ant's log is broken
+RAT-44,Major,Closed,Fixed,02-04-09 14:54,Typo on RAT documentation site
+RAT-62,Major,Closed,Fixed,17-07-09 6:30,Some of RATs own files missing License Headers
+RAT-63,Major,Resolved,Fixed,16-09-09 6:47,ant-task-examples.xml has an wrong uri in the -typedef ant target
+RAT-64,Critical,Closed,Fixed,25-09-09 22:43,Website is broken
+RAT-70,Major,Closed,Fixed,12-01-10 0:55,Missing closing html tag in generated report by plugin
+RAT-71,Minor,Closed,Fixed,14-01-10 21:59,Missing plugins info site on maven generate site
+RAT-80,Major,Resolved,Fixed,17-09-10 17:32,Compile fails on Fedora rawhide with maven 2.2.1
+RAT-81,Minor,Reopened,Unresolved,10-12-10 3:44,MalformedInputException thrown when RAT tries reading file
+RAT-82,Major,Resolved,Won't Fix,04-02-11 13:54,RAT unable to valid both license text and URL
+RAT-86,Major,Resolved,Fixed,10-03-11 22:23,License insertion doesn't work with just the -a and/or -a -f options.
+RAT-87,Major,Resolved,Fixed,11-03-11 17:06,Clean up generated files in TestLicenceAppender
+RAT-90,Minor,Open,Unresolved,30-05-11 14:49,excludeSubProjects=false does not work for flat hierarchy maven project
+RAT-92,Major,Resolved,Fixed,10-08-11 10:55,LicenseAppender uses \n instead of platform dependent line separator when writing the files
+RAT-94,Major,Resolved,Fixed,10-08-11 13:12,"When appending the license, the stream doesn't get closed properly"
+RAT-97,Major,Open,Unresolved,18-08-11 14:46,excludeSubProjects=true fails if project hierarchy more than 1 deep
+RAT-98,Major,Open,Unresolved,01-09-11 23:53,Maven RAT report does not document skipped files
+RAT-100,Major,Resolved,Fixed,02-11-11 5:22,Support for .sln files breaks Visual Studio Express solutions
+RAT-101,Major,Closed,Fixed,15-11-11 16:59,Download page does not include pointer to KEYS file or hashes
+RAT-102,Trivial,Closed,Fixed,18-11-11 22:02,typo in pom.xml / field description
+RAT-107,Major,Open,Unresolved,29-11-11 14:43,useEclipseDefaultExcludes does not ignore sub-module's eclipse dotfiles.
+RAT-109,Major,Resolved,Fixed,29-11-11 21:31,Return value of mkdirs() is not checked and no error handling occurs
+RAT-114,Major,Resolved,Fixed,09-12-11 15:53,Rat project has maven errors in eclipse
+RAT-116,Major,Resolved,Fixed,13-03-12 19:41,Docs don't say what the default excludes are
+RAT-117,Major,Resolved,Fixed,18-06-12 19:08,Tentacles uses a snapshot dependency that is not in mvn central - build failure
+RAT-120,Major,Resolved,Fixed,26-09-12 21:11,fix some maven warning and upgrade some dependencies.
+RAT-121,Major,Resolved,Fixed,26-09-12 21:36,use maven java5 annotations for maven plugins
+RAT-122,Major,Resolved,Fixed,26-09-12 22:41,Maven Plugin: field to ignore errors and continue the build
+RAT-123,Major,Resolved,Fixed,04-11-12 15:26,Improve Rat Core Documentation
+RAT-124,Major,Closed,Fixed,04-11-12 17:54,Rat plugin should exclude the configuration directory used by IDEA
+RAT-126,Minor,Closed,Fixed,18-02-13 21:42,Default excludes do not ignore .git/ repository
+RAT-128,Major,Open,Unresolved,03-03-13 2:50,Use the proper name for Apache License
+RAT-133,Minor,Resolved,Fixed,05-04-13 16:24,Unthrown Exceptions
+RAT-134,Major,Open,Unresolved,07-04-13 23:26,RAT CLI uses different wildcard syntax for -e and -E; neither matches Ant/Maven wildcards
+RAT-135,Major,Resolved,Fixed,26-04-13 20:17,addLicenseHeaders is missing a space on license header.
+RAT-137,Major,Closed,Fixed,15-05-13 0:37,Website shows incorrect Maven goals in some pages
+RAT-140,Major,Resolved,Fixed,19-05-13 1:34,OASISLicense allows invalid Copyright line
+RAT-141,Major,Open,Unresolved,19-05-13 2:46,JavaDocLicenseNotRequired seems to be redundant
+RAT-142,Minor,Open,Unresolved,19-05-13 18:28,AppliedApacheSoftwareLicense20 does not check that license body follows soon after Copyright header
+RAT-144,Major,Resolved,Fixed,27-06-13 10:53,AbstractRatMojo String constant arrays should be private
+RAT-145,Major,Resolved,Fixed,21-07-13 22:37,"Maven plugin should not run in the ""verify"" phase, but in the ""validate"" phase"
+RAT-146,Major,Open,Unresolved,03-08-13 12:50,Consider Maintaining List of Directories Excluded by Default
+RAT-148,Major,Resolved,Fixed,29-08-13 4:27,LicenseAddingReport#report has useless call to metaData.getData
+RAT-151,Major,Resolved,Fixed,26-11-13 18:32,Detect more archive file formats
+RAT-152,Major,Resolved,Fixed,26-11-13 18:36,"Recognize the format for .bsh, .fml and .jsp file types"
+RAT-153,Major,Resolved,Fixed,26-11-13 18:44,Do not add extra empty lines when appending headers for the Apache License
+RAT-154,Major,Resolved,Fixed,26-11-13 18:50,Indentation of the license header should be decided per family
+RAT-155,Major,Resolved,Fixed,26-11-13 19:02,Do not add empty first and last lines in the license header for certain families
+RAT-156,Major,Resolved,Fixed,26-11-13 19:12,Add some symmetry when applying license headers to files with file type specific headers
+RAT-158,Minor,Open,Unresolved,07-03-14 1:13,SAXParser warnings
+RAT-159,Major,Closed,Fixed,07-04-14 20:12,Detect OpenOffice documents as being archives
+RAT-160,Major,Resolved,Fixed,09-04-14 14:41,Fails to ignore build.log created by maven-invoker-plugin
+RAT-168,Major,Resolved,Fixed,10-08-14 23:39,Add integration test for apache-rat:rat to catch NPE
+RAT-169,Major,Resolved,Not A Problem,11-08-14 11:35,IT tests it2 and it3 don't appear to be run
+RAT-173,Major,Resolved,Fixed,10-09-14 21:11,"Cannot skip plugin run completely, but check only"
+RAT-174,Major,Resolved,Fixed,11-09-14 14:16,CDDL1License still very slow
+RAT-175,Major,Resolved,Fixed,16-09-14 10:30,SourceCodeManagementSystems.hasIgnoreFile() should return boolean
+RAT-176,Minor,Open,Unresolved,16-09-14 12:24,BinaryGuesser.isBinary(String name) ought to throw for null input
+RAT-177,Major,Resolved,Fixed,16-09-14 14:12,final arrays should be private
+RAT-178,Major,Open,Unresolved,16-09-14 14:30,BinaryGuesser should not ignore all IOExceptions
+RAT-179,Major,Resolved,Fixed,16-09-14 23:12,Maven plugin and Ant task do not support adding extra approved licences
+RAT-180,Minor,Resolved,Fixed,16-09-14 23:55,Incorrect text in report
+RAT-188,Major,Resolved,Fixed,11-11-14 8:47,Fix RAT build on GUMP with Java 8 (workaround MANIMALSNIFFER-45)
+RAT-190,Major,Open,Unresolved,19-01-15 22:34,False negatives(?) in apache rat license checking
+RAT-207,Major,Open,Unresolved,21-07-15 17:24,Properly report thread safety to Maven
+RAT-211,Major,Open,Unresolved,16-02-16 12:01,"Generated rat-output.xml must be well-formed, even if BinaryGuesser fails"
+RAT-212,Major,Open,Unresolved,23-02-16 19:34,pom.xml license failure when url is https
+RAT-214,Major,Closed,Fixed,14-03-16 20:45,Update commons-compress and apache-ant due to security problems
+RAT-215,Major,Resolved,Fixed,18-03-16 8:14,BinaryGuesser should treat *.woff2 as binary
+RAT-222,Major,Resolved,Fixed,23-09-16 20:21,Download script of SNAPSHOT site refers to yet unavailable artifact but should show releases only
+RAT-224,Major,Resolved,Fixed,20-11-16 21:47,apache-rat-plugin custom license example doesn't work
+RAT-225,Major,Closed,Invalid,18-12-16 13:00,Maven RAT excludes do not work under windows
+RAT-228,Major,Open,Unresolved,06-02-17 22:19,Test failures in antunit does not break the maven build / ANT does not seem to recognize additional licenses
+RAT-229,Major,Closed,Fixed,09-03-17 1:47,Mp3 files are not treated as binary
+RAT-230,Major,Closed,Fixed,17-03-17 6:17,Short Apache header is not accepted by apache-rat-plugin
+RAT-234,Major,Open,Unresolved,04-05-17 15:35,TypeScript files (*.ts) are categorized as binary files and are ignored
+RAT-235,Major,Open,Unresolved,09-05-17 19:02,Symlinks are not recognized in a compressed tarball
+RAT-236,Minor,Open,Unresolved,06-06-17 18:25,"cannot find ""org/apache/rat/unapproved-licenses.xsl"";"
+RAT-238,Major,Open,Unresolved,25-08-17 18:26,Broken symlinks result in crash
+RAT-239,Major,Open,Unresolved,26-08-17 20:36,rat plugin fails in mult-iproject build when subproject has surefire-plugin forkCount=0
+RAT-240,Major,Open,Unresolved,03-09-17 20:06,.rat-excludes not matching full path
